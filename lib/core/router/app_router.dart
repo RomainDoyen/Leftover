@@ -17,6 +17,10 @@ abstract class Routes {
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: Routes.home,
+    errorBuilder: (context, state) => Scaffold(
+      appBar: AppBar(title: const Text('Erreur')),
+      body: const Center(child: Text('Page introuvable')),
+    ),
     routes: [
       ShellRoute(
         builder: (context, state, child) => _AppShell(child: child),
@@ -38,25 +42,25 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.result,
         builder: (context, state) => ResultScreen(
-          match: state.extra as RecipeMatch?,
+          match: state.extra is RecipeMatch ? state.extra as RecipeMatch : null,
         ),
       ),
       GoRoute(
         path: Routes.cooking,
         builder: (context, state) => CookingScreen(
-          match: state.extra as RecipeMatch?,
+          match: state.extra is RecipeMatch ? state.extra as RecipeMatch : null,
         ),
       ),
     ],
   );
 });
 
-class _AppShell extends ConsumerWidget {
+class _AppShell extends StatelessWidget {
   final Widget child;
   const _AppShell({required this.child});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     return Scaffold(
       body: child,
