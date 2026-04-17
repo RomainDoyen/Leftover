@@ -73,12 +73,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             floating: true,
             snap: true,
             backgroundColor: Colors.white,
-            title: Text(
-              'Leftover Roulette',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/icons/logo.png',
+                    width: 28,
+                    height: 28,
+                    fit: BoxFit.cover,
                   ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Leftover Roulette',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ],
             ),
             actions: [
               if (_useFirebase)
