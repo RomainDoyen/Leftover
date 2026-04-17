@@ -61,7 +61,7 @@ void main() {
         containsAll(['pâte à tarte', 'crème fraîche']));
   });
 
-  test('excludes recipes below 30% threshold', () async {
+  test('excludes recipes with zero matching ingredients', () async {
     final result = await useCase.execute(['sel']);
     expect(result, isEmpty);
   });
@@ -110,8 +110,8 @@ void main() {
     );
     when(mockRepo.getAll()).thenAnswer((_) async => [quicheRecipe, omelette]);
     final result = await useCase.execute(['oignon']);
-    // omelette = 1/1 = 100%, quiche = 1/4 = 25% (excluded < 30%)
-    expect(result.length, 1);
-    expect(result.first.recipe.name, 'Omelette');
+    // omelette = 1/1 = 100%, quiche = 1/4 = 25% — both have ≥1 match
+    expect(result.length, 2);
+    expect(result.first.recipe.name, 'Omelette'); // highest score first
   });
 }

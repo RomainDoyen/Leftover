@@ -6,7 +6,6 @@ import '../../core/utils/string_normalizer.dart';
 
 class MatchRecipesUseCase {
   final RecipeRepository _repo;
-  static const double _minScore = 0.30;
 
   const MatchRecipesUseCase(this._repo);
 
@@ -37,7 +36,7 @@ class MatchRecipesUseCase {
           ? 0.0
           : matched.length / recipe.ingredients.length;
 
-      if (score >= _minScore) {
+      if (matched.isNotEmpty) {
         results.add(RecipeMatch(
           recipe: recipe,
           matchScore: score,
