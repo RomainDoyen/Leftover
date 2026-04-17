@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shopping List - Leftover Roulette</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-error": "#ffefee","on-surface": "#2d2f2c","on-error-container": "#570008",
+          "secondary-dim": "#005d1c","inverse-surface": "#0d0f0c","primary-container": "#ff784e",
+          "primary-fixed-dim": "#f3683b","tertiary-container": "#ea9bff","surface-container-low": "#f1f1ec",
+          "tertiary-fixed-dim": "#db8ef0","primary-dim": "#952800","on-tertiary-fixed-variant": "#641e7a",
+          "on-background": "#2d2f2c","tertiary": "#843d99","surface-dim": "#d3d5cf",
+          "surface-container-highest": "#dcddd7","surface-container-lowest": "#ffffff","surface": "#f7f7f2",
+          "secondary-fixed-dim": "#91e892","error": "#b31b25","on-primary-container": "#470e00",
+          "inverse-on-surface": "#9c9d99","background": "#f7f7f2","primary-fixed": "#ff784e",
+          "outline": "#767773","on-primary-fixed-variant": "#571400","on-tertiary-fixed": "#3b004d",
+          "error-container": "#fb5151","surface-container": "#e8e9e3","secondary-fixed": "#9ff79f",
+          "on-secondary-container": "#005f1d","outline-variant": "#adada9","on-tertiary": "#ffedfd",
+          "on-secondary-fixed-variant": "#0c6a24","surface-variant": "#dcddd7","primary": "#a83206",
+          "on-surface-variant": "#5a5c58","on-primary-fixed": "#000000","surface-container-high": "#e2e3dd",
+          "error-dim": "#9f0519","secondary-container": "#9ff79f","on-primary": "#ffefeb",
+          "on-tertiary-container": "#5a1171","surface-bright": "#f7f7f2","surface-tint": "#a83206",
+          "inverse-primary": "#fe6f42","secondary": "#0c6a24","on-secondary-fixed": "#004a15",
+          "tertiary-dim": "#76308c","tertiary-fixed": "#ea9bff","on-secondary": "#d0ffcb"
+        },
+        borderRadius: { "DEFAULT": "0.25rem","lg": "0.5rem","xl": "0.75rem","full": "9999px" },
+        fontFamily: { "headline": ["Plus Jakarta Sans"],"body": ["Inter"],"label": ["Inter"] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { min-height: max(884px, 100dvh); font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen pb-32">
+
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl flex justify-between items-center px-6 py-4">
+  <div class="flex items-center gap-4">
+    <span class="material-symbols-outlined text-orange-600">menu</span>
+    <h1 class="text-2xl font-extrabold text-orange-600 font-headline tracking-tight">Leftover Roulette</h1>
+  </div>
+  <span class="material-symbols-outlined text-orange-600">account_circle</span>
+</header>
+
+<main class="pt-24 px-6 max-w-2xl mx-auto">
+  <!-- Header -->
+  <section class="mb-10 mr-6">
+    <h2 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Shopping</h2>
+    <p class="text-on-surface-variant font-medium">Missing items for your Quiche Roulette.</p>
+  </section>
+
+  <!-- Missing Items -->
+  <section class="mb-8">
+    <div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+      <h3 class="font-headline font-bold text-lg mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">restaurant_menu</span>
+        Current Mission
+      </h3>
+      <div class="space-y-4">
+        <label class="flex items-center group cursor-pointer p-4 bg-surface rounded-xl active:scale-95 transition-all duration-200">
+          <div class="relative flex items-center justify-center w-6 h-6 mr-4">
+            <input class="peer hidden" type="checkbox"/>
+            <div class="w-6 h-6 rounded-full bg-surface-container-highest peer-checked:bg-secondary transition-colors duration-200"></div>
+            <span class="material-symbols-outlined text-white text-sm absolute opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
+          </div>
+          <div class="flex-grow">
+            <span class="font-bold text-on-surface">Pie Crust</span>
+            <span class="block text-xs text-on-surface-variant uppercase tracking-widest font-bold mt-1">Dough &amp; Pastry</span>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+        </label>
+        <label class="flex items-center group cursor-pointer p-4 bg-surface rounded-xl active:scale-95 transition-all duration-200">
+          <div class="relative flex items-center justify-center w-6 h-6 mr-4">
+            <input class="peer hidden" type="checkbox"/>
+            <div class="w-6 h-6 rounded-full bg-surface-container-highest peer-checked:bg-secondary transition-colors duration-200"></div>
+            <span class="material-symbols-outlined text-white text-sm absolute opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
+          </div>
+          <div class="flex-grow">
+            <span class="font-bold text-on-surface">Bacon Bits</span>
+            <span class="block text-xs text-on-surface-variant uppercase tracking-widest font-bold mt-1">Proteins</span>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frequent Items -->
+  <section>
+    <div class="flex justify-between items-end mb-6">
+      <h3 class="font-headline font-bold text-xl">Frequent Items</h3>
+      <button class="text-sm font-bold text-primary px-2 py-1">View All</button>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-secondary">egg</span>
+        </div>
+        <div>
+          <p class="font-bold">Organic Eggs</p>
+          <p class="text-xs text-on-surface-variant">Dairy &amp; Eggs</p>
+        </div>
+        <button class="mt-2 w-full py-2 rounded-lg bg-surface-container-highest font-bold text-xs hover:bg-primary hover:text-white transition-colors">Add to List</button>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-secondary">opacity</span>
+        </div>
+        <div>
+          <p class="font-bold">Olive Oil</p>
+          <p class="text-xs text-on-surface-variant">Pantry Essentials</p>
+        </div>
+        <button class="mt-2 w-full py-2 rounded-lg bg-surface-container-highest font-bold text-xs hover:bg-primary hover:text-white transition-colors">Add to List</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promo Card -->
+  <div class="mt-10 p-1 bg-gradient-to-br from-primary to-primary-container rounded-xl overflow-hidden">
+    <div class="bg-surface rounded-[0.7rem] p-6 flex items-center gap-6">
+      <div class="flex-grow">
+        <p class="text-secondary font-headline font-extrabold text-2xl">35%</p>
+        <p class="text-[0.65rem] uppercase tracking-tighter font-black text-on-surface-variant">Waste Reduction Today</p>
+      </div>
+      <div class="w-16 h-16 rounded-xl overflow-hidden shadow-lg">
+        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD46IroBq_AShITw_IY_CU1y5Do3tp3zj0NdoTDK0FRaZ8mKw921Hi78F7Tn-mvCSQ4HfkpevTP5McBQEh1s90VdUYjHunmhATdIdZzTX3i4A5DJpJ_Atx5G6ijPDswMyOBicRCUQP7W2jz1nXFqUeGvGP3-GZN41AYhYNcR2DI4Y3Yw-V6CTtG7nxPUAsQb6qfzEinAVrdWk18vDLCVdBlHxntZ9yfsQatrUI6DMchFI6FAahW9t2QGfILqXL68FqCWb_X4840Iu4U" alt="Fresh vegetables"/>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-2xl rounded-t-[1.5rem] z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+  <div class="flex flex-col items-center justify-center text-zinc-400 px-5 py-2 hover:text-orange-500 transition-all duration-200 active:scale-95">
+    <span class="material-symbols-outlined text-2xl">casino</span>
+    <span class="font-['Inter'] text-xs font-semibold mt-1">Spin</span>
+  </div>
+  <div class="flex flex-col items-center justify-center text-zinc-400 px-5 py-2 hover:text-orange-500 transition-all duration-200 active:scale-95">
+    <span class="material-symbols-outlined text-2xl">bookmark</span>
+    <span class="font-['Inter'] text-xs font-semibold mt-1">Saved</span>
+  </div>
+  <div class="flex flex-col items-center justify-center bg-orange-100 text-orange-700 rounded-[1.5rem] px-5 py-2 transition-all duration-200 active:scale-95">
+    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shopping_basket</span>
+    <span class="font-['Inter'] text-xs font-semibold mt-1">Shopping</span>
+  </div>
+</nav>
+
+</body>
+</html>

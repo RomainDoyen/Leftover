@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leftover Roulette — Documentation</title>
+  <meta name="description" content="Documentation complète de Leftover Roulette — app mobile Flutter qui transforme tes restes en recettes." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       Leftover Roulette — Documentation Stylesheet
+       ============================================================ */
+
+    /* ---- Custom Properties ---- */
+    :root {
+      --primary:                   #a83206;
+      --primary-container:         #ff784e;
+      --secondary:                 #0c6a24;
+      --secondary-container:       #9ff79f;
+      --tertiary:                  #843d99;
+      --surface:                   #f7f7f2;
+      --surface-container-lowest:  #ffffff;
+      --surface-container-low:     #f1f1ec;
+      --surface-container:         #e8e9e3;
+      --surface-container-high:    #e2e3dd;
+      --surface-container-highest: #dcddd7;
+      --on-surface:                #2d2f2c;
+      --on-surface-variant:        #5a5c58;
+      --outline:                   #767773;
+      --outline-variant:           #adada9;
+      --sidebar-width: 268px;
+      --font-headline: 'Plus Jakarta Sans', sans-serif;
+      --font-body:     'Inter', sans-serif;
+      --font-mono:     'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+    }
+
+    /* ---- Reset ---- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--surface); color: var(--on-surface); line-height: 1.65; }
+    h1, h2, h3, h4, h5 { font-family: var(--font-headline); }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.84em;
+      background: var(--surface-container-high);
+      padding: 0.1em 0.45em;
+      border-radius: 5px;
+      color: var(--primary);
+    }
+    p { color: var(--on-surface-variant); line-height: 1.75; margin-bottom: 16px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ---- Material Symbols ---- */
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+    /* ---- Layout ---- */
+    .layout { margin-left: var(--sidebar-width); min-height: 100vh; }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--sidebar-width); height: 100vh;
+      background: var(--surface-container-lowest);
+      border-right: 1px solid var(--outline-variant);
+      display: flex; flex-direction: column; overflow-y: auto;
+      z-index: 100; transition: transform 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--outline-variant); border-radius: 4px; }
+    .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 20px 20px 16px; border-bottom: 1px solid var(--outline-variant); flex-shrink: 0; }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-container));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: white; flex-shrink: 0;
+    }
+    .logo-icon .material-symbols-outlined { font-size: 20px; }
+    .logo-name { font-family: var(--font-headline); font-weight: 800; font-size: 0.875rem; color: var(--on-surface); line-height: 1.2; }
+    .logo-version { font-size: 0.6875rem; color: var(--on-surface-variant); font-weight: 500; }
+    .sidebar-search { position: relative; padding: 12px 16px; border-bottom: 1px solid var(--outline-variant); flex-shrink: 0; }
+    .search-icon { position: absolute; left: 28px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--on-surface-variant); }
+    .sidebar-search input {
+      width: 100%; padding: 8px 12px 8px 34px;
+      background: var(--surface-container); border: 1.5px solid transparent;
+      border-radius: 8px; font-family: var(--font-body); font-size: 0.8125rem;
+      color: var(--on-surface); outline: none; transition: border-color 0.15s;
+    }
+    .sidebar-search input::placeholder { color: var(--on-surface-variant); }
+    .sidebar-search input:focus { border-color: var(--primary); }
+    .sidebar-nav { flex: 1; padding: 8px 0 16px; overflow-y: auto; }
+    .nav-group { margin-bottom: 4px; }
+    .nav-group-title { padding: 14px 20px 4px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--on-surface-variant); }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 8px 20px;
+      font-size: 0.875rem; font-weight: 500; color: var(--on-surface-variant);
+      text-decoration: none; transition: all 0.15s ease;
+      border-left: 3px solid transparent; cursor: pointer;
+    }
+    .nav-item:hover { background: var(--surface-container-low); color: var(--on-surface); text-decoration: none; }
+    .nav-item.active { color: var(--primary); background: rgba(168,50,6,.05); border-left-color: var(--primary); font-weight: 600; }
+    .nav-icon { font-size: 18px; flex-shrink: 0; }
+    .sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--outline-variant); display: flex; gap: 8px; flex-shrink: 0; }
+    .footer-badge { font-size: 0.6875rem; font-weight: 600; padding: 4px 10px; background: var(--surface-container); color: var(--on-surface-variant); border-radius: 100px; text-decoration: none; transition: all 0.15s ease; }
+    .footer-badge:hover { background: var(--primary); color: white; text-decoration: none; }
+
+    /* ---- Mobile Topbar ---- */
+    .topbar { display: none; position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.88); backdrop-filter: blur(14px); border-bottom: 1px solid var(--outline-variant); padding: 12px 20px; align-items: center; justify-content: space-between; }
+    .burger-btn { background: none; border: none; cursor: pointer; color: var(--primary); display: flex; align-items: center; padding: 4px; }
+    .topbar-title { font-family: var(--font-headline); font-weight: 800; font-size: 1rem; color: var(--primary); }
+
+    /* ---- Content ---- */
+    .content { max-width: 800px; padding: 0 52px 100px; }
+
+    /* ---- Doc Section ---- */
+    .doc-section { padding-top: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--outline-variant); scroll-margin-top: 16px; }
+    .doc-section:last-child { border-bottom: none; }
+    .section-badge { display: inline-block; padding: 4px 12px; background: rgba(168,50,6,.08); color: var(--primary); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 100px; margin-bottom: 12px; }
+    .section-title { font-size: 2.5rem; font-weight: 800; line-height: 1.12; margin-bottom: 16px; }
+    .section-subtitle { font-size: 1.0625rem; color: var(--on-surface-variant); line-height: 1.7; margin-bottom: 44px; max-width: 560px; }
+    .doc-section h2 { font-size: 1.375rem; font-weight: 700; margin-top: 44px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid var(--surface-container-highest); }
+    .doc-section h3 { font-size: 1.0625rem; font-weight: 700; margin-top: 28px; margin-bottom: 12px; }
+    .doc-section ol, .doc-section ul { padding-left: 22px; color: var(--on-surface-variant); line-height: 1.85; }
+    .doc-section li { margin-bottom: 4px; }
+
+    /* ---- Callout ---- */
+    .callout { display: flex; gap: 14px; padding: 16px 20px; border-radius: 12px; margin: 28px 0; font-size: 0.9375rem; line-height: 1.65; }
+    .callout-info    { background: rgba(12,106,36,.06);  border: 1px solid rgba(12,106,36,.2);  color: var(--on-surface); }
+    .callout-warning { background: rgba(168,50,6,.06);   border: 1px solid rgba(168,50,6,.2);   color: var(--on-surface); }
+    .callout-info .callout-icon    { color: var(--secondary); }
+    .callout-warning .callout-icon { color: var(--primary); }
+    .callout-icon { flex-shrink: 0; font-size: 20px; margin-top: 2px; }
+
+    /* ---- Hero Banner ---- */
+    .hero-banner { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%); border-radius: 20px; padding: 36px 44px; margin: 32px 0; color: white; }
+    .hero-content { display: flex; align-items: center; }
+    .hero-stat { flex: 1; text-align: center; }
+    .hero-stat-number { display: block; font-family: var(--font-headline); font-size: 2.5rem; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+    .hero-stat-label { font-size: 0.75rem; font-weight: 600; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .hero-divider { width: 1px; height: 64px; background: rgba(255,255,255,0.2); }
+
+    /* ---- Feature Grid ---- */
+    .feature-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 24px 0; }
+    .feature-card { background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; transition: box-shadow 0.2s ease, transform 0.2s ease; }
+    .feature-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.07); transform: translateY(-2px); }
+    .feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .feature-icon .material-symbols-outlined { font-size: 22px; }
+    .feature-icon-primary  { background: rgba(168,50,6,.1);   color: var(--primary); }
+    .feature-icon-secondary{ background: rgba(12,106,36,.1);  color: var(--secondary); }
+    .feature-icon-tertiary { background: rgba(132,61,153,.1); color: var(--tertiary); }
+    .feature-card h3 { font-size: 0.9375rem; font-weight: 700; margin: 0 0 8px; }
+    .feature-card p  { font-size: 0.875rem; line-height: 1.6; margin: 0; }
+
+    /* ---- Stack Grid ---- */
+    .stack-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 16px 0; }
+    .stack-card { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; }
+    .stack-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stack-name    { font-weight: 700; font-size: 0.875rem; }
+    .stack-version { font-size: 0.75rem; color: var(--on-surface-variant); }
+
+    /* ---- Next Section Link ---- */
+    .next-section-link { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 44px; color: var(--primary); font-weight: 600; font-size: 0.9375rem; cursor: pointer; transition: gap 0.15s ease; user-select: none; }
+    .next-section-link:hover { gap: 14px; }
+
+    /* ---- Step Blocks ---- */
+    .step-block { display: flex; gap: 20px; margin-bottom: 32px; }
+    .step-number { width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--font-headline); font-weight: 800; font-size: 0.9375rem; flex-shrink: 0; margin-top: 4px; }
+    .step-content { flex: 1; }
+    .step-content h3 { margin-top: 0; margin-bottom: 10px; }
+
+    /* ---- Prereq List ---- */
+    .prereq-list { margin: 16px 0 32px; display: flex; flex-direction: column; gap: 12px; }
+    .prereq-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; }
+    .prereq-check { width: 24px; height: 24px; background: rgba(12,106,36,.1); color: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .prereq-check .material-symbols-outlined { font-size: 14px; font-variation-settings: 'FILL' 1, 'wght' 600; }
+    .prereq-sub { color: var(--on-surface-variant); font-size: 0.875rem; }
+
+    /* ---- Code Blocks ---- */
+    .code-block { background: #1a1c1e; color: #cdd6f4; border-radius: 12px; padding: 20px 24px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.75; margin: 16px 0; border: 1px solid rgba(255,255,255,0.04); }
+    .code-block code { background: none; padding: 0; color: inherit; font-size: inherit; border-radius: 0; }
+    .code-block-sm { font-size: 0.75rem; }
+    .code-comment { color: #6b9e5e; font-style: italic; }
+    .code-keyword  { color: #c792ea; }
+    .code-type     { color: #82aaff; }
+    .code-string   { color: #c3e88d; }
+
+    /* ---- Algo Flow ---- */
+    .algo-flow { display: flex; align-items: center; gap: 8px; margin: 24px 0; flex-wrap: wrap; }
+    .algo-step { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; flex: 1; min-width: 100px; }
+    .algo-step-icon { width: 48px; height: 48px; background: var(--surface-container-lowest); border: 2px solid var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+    .algo-step-text { display: flex; flex-direction: column; gap: 3px; }
+    .algo-step-text strong { color: var(--on-surface); font-size: 0.8125rem; }
+    .algo-step-text span   { color: var(--on-surface-variant); font-size: 0.6875rem; }
+    .algo-arrow { color: var(--outline); font-size: 1.25rem; flex-shrink: 0; }
+
+    /* ---- Formula ---- */
+    .formula-block { background: rgba(168,50,6,.06); border: 1px solid rgba(168,50,6,.2); border-radius: 12px; padding: 16px 24px; margin: 16px 0; text-align: center; }
+    .formula-text { font-family: var(--font-mono); font-size: 0.9375rem; color: var(--primary); font-weight: 600; }
+
+    /* ---- Feature Detail Card ---- */
+    .feature-detail-card { display: flex; gap: 20px; background: var(--surface-container-low); border-radius: 16px; padding: 24px; margin: 16px 0; }
+    .feature-detail-icon { width: 44px; height: 44px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+    .feature-list { padding-left: 20px; color: var(--on-surface-variant); line-height: 1.85; font-size: 0.9375rem; }
+
+    /* ---- Screens ---- */
+    .screen-tabs { display: flex; gap: 6px; background: var(--surface-container); border-radius: 12px; padding: 6px; }
+    .screen-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border: none; background: none; border-radius: 8px; font-family: var(--font-body); font-size: 0.8125rem; font-weight: 600; color: var(--on-surface-variant); cursor: pointer; transition: all 0.2s ease; }
+    .screen-tab .material-symbols-outlined { font-size: 17px; }
+    .screen-tab:hover { background: var(--surface-container-lowest); color: var(--on-surface); }
+    .screen-tab.active { background: var(--surface-container-lowest); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .screens-content { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: start; margin-top: 28px; }
+    .phone-wrapper { display: flex; justify-content: center; position: sticky; top: 24px; }
+    .phone-mockup { width: 300px; background: #111215; border-radius: 48px; padding: 12px; box-shadow: 0 0 0 1px rgba(255,255,255,0.07) inset, 0 0 0 2px #2a2a2a, 0 40px 80px rgba(0,0,0,0.35), 0 12px 24px rgba(0,0,0,0.2); }
+    .phone-notch { width: 90px; height: 6px; background: #2a2a2a; border-radius: 3px; margin: 0 auto 10px; }
+    .phone-screen { border-radius: 36px; overflow: hidden; background: white; height: 598px; position: relative; }
+    .phone-screen iframe { width: 390px; height: 844px; border: none; transform: scale(0.744); transform-origin: top left; pointer-events: auto; }
+    .screen-description { padding-top: 4px; }
+    .screen-desc { display: none; }
+    .screen-desc.active { display: block; }
+    .screen-desc h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+    .screen-desc > p { margin-bottom: 18px; font-size: 0.9375rem; }
+    .screen-desc-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .screen-desc-list li { font-size: 0.875rem; padding-left: 22px; position: relative; line-height: 1.55; }
+    .screen-desc-list li::before { content: '\2014'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+    /* ---- Architecture ---- */
+    .arch-layers { display: flex; flex-direction: column; gap: 4px; margin: 24px 0; }
+    .arch-layer { border-radius: 14px; padding: 18px 22px; border: 1.5px solid transparent; }
+    .arch-layer-presentation { background: rgba(168,50,6,.06);   border-color: rgba(168,50,6,.18); }
+    .arch-layer-domain        { background: rgba(132,61,153,.06); border-color: rgba(132,61,153,.18); }
+    .arch-layer-data          { background: rgba(12,106,36,.06);  border-color: rgba(12,106,36,.18); }
+    .arch-layer-label { font-weight: 700; font-size: 0.875rem; margin-bottom: 10px; }
+    .arch-layer-content { display: flex; flex-wrap: wrap; gap: 8px; }
+    .arch-tag { padding: 4px 12px; background: var(--surface-container-lowest); border-radius: 100px; font-size: 0.75rem; font-weight: 600; border: 1px solid var(--outline-variant); }
+    .arch-arrow-down { text-align: center; color: var(--outline); font-size: 0.9375rem; padding: 2px 0; }
+
+    /* ---- Packages Table ---- */
+    .packages-table { overflow-x: auto; margin: 16px 0; border-radius: 12px; border: 1px solid var(--outline-variant); }
+    .packages-table table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .packages-table th { background: var(--surface-container); padding: 12px 16px; text-align: left; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .packages-table td { padding: 12px 16px; border-top: 1px solid var(--outline-variant); color: var(--on-surface-variant); }
+    .packages-table td:first-child code { color: var(--primary); font-weight: 600; }
+    .packages-table tr:hover td { background: var(--surface-container-low); }
+
+    /* ---- Firebase ---- */
+    .firebase-services { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 16px 0 32px; }
+    .firebase-service { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; }
+    .service-icon { color: var(--primary); font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .firebase-service strong { display: block; font-size: 0.8125rem; font-weight: 700; margin-bottom: 2px; }
+    .firebase-service span   { font-size: 0.75rem; color: var(--on-surface-variant); }
+    .collection-card { background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; margin: 16px 0; }
+    .collection-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .collection-icon { width: 40px; height: 40px; background: rgba(168,50,6,.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+    .collection-header h3 { margin: 0; font-size: 1.0625rem; font-weight: 700; }
+    .collection-path { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 2px; }
+
+    /* ---- Design System ---- */
+    .color-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 16px 0; }
+    .color-swatch { border-radius: 12px; padding: 40px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .color-name { font-size: 0.6875rem; font-weight: 700; color: rgba(255,255,255,0.9); }
+    .color-hex  { font-size: 0.625rem; font-family: var(--font-mono); color: rgba(255,255,255,0.7); }
+    .type-showcase { display: flex; flex-direction: column; margin: 16px 0; border: 1px solid var(--outline-variant); border-radius: 16px; overflow: hidden; }
+    .type-row { display: flex; align-items: center; gap: 28px; padding: 20px 24px; border-bottom: 1px solid var(--outline-variant); }
+    .type-row:last-child { border-bottom: none; }
+    .type-meta { width: 210px; flex-shrink: 0; }
+    .type-role { display: block; font-size: 0.8125rem; font-weight: 700; }
+    .type-spec { display: block; font-size: 0.6875rem; color: var(--on-surface-variant); margin-top: 2px; }
+    .type-sample { color: var(--on-surface); line-height: 1.3; }
+    .component-section { margin: 36px 0; }
+    .component-section > h3 { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--on-surface-variant); margin-bottom: 14px; }
+    .component-preview { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 24px; background: var(--surface-container-low); border-radius: 16px; }
+    .comp-preview-col { flex-direction: column; align-items: stretch; }
+    .comp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 12px; font-family: var(--font-body); font-size: 0.875rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s ease; }
+    .comp-btn-primary  { background: linear-gradient(135deg,var(--primary),var(--primary-container)); color: white; box-shadow: 0 4px 14px rgba(168,50,6,.28); }
+    .comp-btn-primary:hover  { opacity: 0.9; transform: translateY(-1px); }
+    .comp-btn-secondary { background: var(--secondary); color: white; }
+    .comp-btn-outlined  { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+    .comp-btn-ghost     { background: transparent; color: var(--on-surface-variant); }
+    .comp-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 100px; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+    .comp-chip-active { background: #9ff79f; color: #005f1d; }
+    .comp-chip-muted  { background: var(--surface-container-high); color: var(--on-surface-variant); }
+    .comp-ingredient { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; }
+    .comp-ingredient-owned   { background: var(--surface-container-low); }
+    .comp-ingredient-missing { background: white; border: 1px solid var(--outline-variant); border-left: 4px solid var(--primary); justify-content: space-between; }
+    .comp-ingredient-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .comp-ingredient-owned-icon   { background: #9ff79f; color: #005f1d; }
+    .comp-ingredient-missing-icon { background: rgba(168,50,6,.1); color: var(--primary); }
+    .comp-add-btn { padding: 6px 14px; border-radius: 100px; background: var(--surface-container); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; font-family: var(--font-body); }
+    .comp-radius-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; }
+
+    /* ---- Copy Button ---- */
+    .code-block-wrapper { position: relative; }
+    .copy-btn { position: absolute; top: 12px; right: 12px; padding: 4px 12px; border-radius: 6px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); font-family: var(--font-body); font-size: 0.6875rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+    .copy-btn:hover  { background: rgba(255,255,255,0.15); color: white; }
+    .copy-btn.copied { background: rgba(12,106,36,.4); color: #9ff79f; border-color: rgba(12,106,36,.4); }
+
+    /* ---- Overlay ---- */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; backdrop-filter: blur(2px); }
+    .overlay.active { display: block; }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 960px) { .content { padding: 0 32px 80px; } }
+    @media (max-width: 768px) {
+      .layout      { margin-left: 0; }
+      .sidebar     { transform: translateX(-100%); }
+      .sidebar.open{ transform: translateX(0); }
+      .topbar      { display: flex; }
+      .content     { padding: 24px 20px 80px; }
+      .section-title { font-size: 2rem; }
+      .hero-content  { flex-wrap: wrap; gap: 24px; justify-content: center; }
+      .hero-divider  { display: none; }
+      .feature-grid, .stack-grid { grid-template-columns: 1fr; }
+      .firebase-services { grid-template-columns: 1fr; }
+      .color-grid        { grid-template-columns: repeat(2,1fr); }
+      .screens-content   { grid-template-columns: 1fr; }
+      .phone-wrapper     { position: static; }
+      .screen-tabs       { flex-wrap: wrap; }
+      .screen-tab        { flex: none; }
+      .type-row          { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .type-meta         { width: auto; }
+      .algo-flow         { gap: 4px; }
+      .doc-section h2    { margin-top: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Overlay (mobile) -->
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+
+<!-- ============================================================
+     SIDEBAR
+     ============================================================ -->
+<aside id="sidebar" class="sidebar">
+
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <span class="material-symbols-outlined">casino</span>
+    </div>
+    <div>
+      <div class="logo-name">Leftover Roulette</div>
+      <div class="logo-version">v1.0 · Documentation</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="sidebar-search">
+    <span class="material-symbols-outlined search-icon">search</span>
+    <input type="text" id="search-input" placeholder="Rechercher…" autocomplete="off" />
+  </div>
+
+  <!-- Nav -->
+  <nav class="sidebar-nav">
+
+    <div class="nav-group">
+      <div class="nav-group-title">Introduction</div>
+      <a href="#overview" class="nav-item active" data-section="overview">
+        <span class="material-symbols-outlined nav-icon">home</span>Overview
+      </a>
+      <a href="#setup" class="nav-item" data-section="setup">
+        <span class="material-symbols-outlined nav-icon">rocket_launch</span>Getting Started
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Produit</div>
+      <a href="#features" class="nav-item" data-section="features">
+        <span class="material-symbols-outlined nav-icon">auto_awesome</span>Features
+      </a>
+      <a href="#screens" class="nav-item" data-section="screens">
+        <span class="material-symbols-outlined nav-icon">smartphone</span>Screens
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Technique</div>
+      <a href="#architecture" class="nav-item" data-section="architecture">
+        <span class="material-symbols-outlined nav-icon">architecture</span>Architecture
+      </a>
+      <a href="#firebase" class="nav-item" data-section="firebase">
+        <span class="material-symbols-outlined nav-icon">local_fire_department</span>Firebase
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Design</div>
+      <a href="#design" class="nav-item" data-section="design">
+        <span class="material-symbols-outlined nav-icon">palette</span>Design System
+      </a>
+    </div>
+
+  </nav>
+
+  <!-- Footer -->
+  <div class="sidebar-footer">
+    <a href="https://flutter.dev" target="_blank" class="footer-badge">Flutter</a>
+    <a href="https://firebase.google.com" target="_blank" class="footer-badge">Firebase</a>
+    <a href="https://riverpod.dev" target="_blank" class="footer-badge">Riverpod</a>
+  </div>
+
+</aside>
+
+<!-- ============================================================
+     MAIN LAYOUT
+     ============================================================ -->
+<div class="layout">
+
+  <!-- Mobile topbar -->
+  <header class="topbar">
+    <button class="burger-btn" onclick="toggleSidebar()" aria-label="Menu">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span class="topbar-title">Leftover Roulette</span>
+    <div></div>
+  </header>
+
+  <!-- Content -->
+  <main class="content">
+
+
+    <!-- =========================================================
+         SECTION — OVERVIEW
+         ========================================================= -->
+    <section id="overview" class="doc-section">
+
+      <div class="section-badge">Introduction</div>
+      <h1 class="section-title">Leftover Roulette</h1>
+      <p class="section-subtitle">Transforme les ingrédients oubliés de ton frigo en plats réalistes — avec un moteur de matching qui te dit exactement quoi acheter pour compléter la recette.</p>
+
+      <div class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-stat">
+            <span class="hero-stat-number">73%</span>
+            <span class="hero-stat-label">Matching moyen</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-number">≤&thinsp;5</span>
+            <span class="hero-stat-label">Ingrédients max</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-number">4</span>
+            <span class="hero-stat-label">Écrans principaux</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <span class="material-symbols-outlined callout-icon">lightbulb</span>
+        <div>
+          <strong>Le concept</strong> — Tu as 3 ingrédients random au frigo (demi-oignon, sauce soja, fromage frais). L'app te propose non pas une recette complexe, mais un plat réaliste à 5 ingrédients max, et surtout te dit : <em>"Avec ces 3 ingrédients, tu as 73% des composants d'une Quiche Lorraine basique. Achète juste pâte à tarte et lardons."</em>
+        </div>
+      </div>
+
+      <h2>Fonctionnalités clés</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-primary">
+            <span class="material-symbols-outlined">casino</span>
+          </div>
+          <h3>Smart Matching</h3>
+          <p>Algorithme de correspondance fuzzy qui calcule le score de match de chaque recette Firestore par rapport à tes ingrédients.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-secondary">
+            <span class="material-symbols-outlined">shopping_basket</span>
+          </div>
+          <h3>Shopping List Auto</h3>
+          <p>Génère automatiquement la liste des manquants et la synchronise en temps réel sur Firestore — accessible sur tous les devices.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-tertiary">
+            <span class="material-symbols-outlined">eco</span>
+          </div>
+          <h3>Zero Waste Score</h3>
+          <p>Calcule l'impact estimé de chaque repas et affiche un score de réduction du gaspillage alimentaire par session.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon feature-icon-primary">
+            <span class="material-symbols-outlined">menu_book</span>
+          </div>
+          <h3>Cooking Steps</h3>
+          <p>Instructions pas-à-pas adaptées aux ingrédients disponibles, avec minuterie intégrée et mode "écran allumé" activé.</p>
+        </div>
+      </div>
+
+      <h2>Stack technique</h2>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="stack-icon" style="background:#0553B1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zm.159 13.28L12 15.754l2.465 2.465 2.474-2.474L14.473 13.28z"/><path d="M6 21.7L12 15.7l2.465 2.465L9.4 23.23 6 21.7zM0 17.734L3.3 21.03 12 12.33 8.7 9.03 0 17.734z"/></svg>
+          </div>
+          <div>
+            <div class="stack-name">Flutter</div>
+            <div class="stack-version">SDK ≥ 3.0 · Dart ≥ 3.0</div>
+          </div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon" style="background:#FFCA28;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#1a1a1a"><path d="M3.89 15.673L6.255.461A.542.542 0 017.27.288l2.543 4.771zm16.794 3.692l-2.25-14a.54.54 0 00-.919-.295L3.316 19.365l7.865 4.426a1.621 1.621 0 001.588 0zM14.3 7.147l-1.82-3.482a.542.542 0 00-.96 0L4.03 17.565z"/></svg>
+          </div>
+          <div>
+            <div class="stack-name">Firebase</div>
+            <div class="stack-version">Firestore · Auth · Storage</div>
+          </div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon" style="background:#00B4AB;">
+            <span style="color:white;font-weight:800;font-size:13px;font-family:monospace;">Rv</span>
+          </div>
+          <div>
+            <div class="stack-name">Riverpod</div>
+            <div class="stack-version">State management ^2.4</div>
+          </div>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon" style="background:#2B6CB0;">
+            <span style="color:white;font-weight:800;font-size:12px;font-family:monospace;">GR</span>
+          </div>
+          <div>
+            <div class="stack-name">GoRouter</div>
+            <div class="stack-version">Navigation ^12.1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-section-link" onclick="navigateTo('setup')">
+        Suivant&nbsp;: Getting Started
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — GETTING STARTED
+         ========================================================= -->
+    <section id="setup" class="doc-section">
+
+      <div class="section-badge">Introduction</div>
+      <h1 class="section-title">Getting Started</h1>
+      <p class="section-subtitle">Configure ton environnement et lance l'app en local en quelques minutes.</p>
+
+      <h2>Prérequis</h2>
+      <div class="prereq-list">
+        <div class="prereq-item">
+          <div class="prereq-check"><span class="material-symbols-outlined">check</span></div>
+          <div>
+            <strong>Flutter SDK ≥ 3.0</strong>
+            <span class="prereq-sub"> — <a href="https://flutter.dev/docs/get-started/install" target="_blank">flutter.dev/docs/get-started/install</a></span>
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-check"><span class="material-symbols-outlined">check</span></div>
+          <div><strong>Dart SDK ≥ 3.0</strong><span class="prereq-sub"> — Inclus avec Flutter</span></div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-check"><span class="material-symbols-outlined">check</span></div>
+          <div>
+            <strong>Firebase CLI</strong>
+            <span class="prereq-sub"> — </span><code>npm install -g firebase-tools</code>
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-check"><span class="material-symbols-outlined">check</span></div>
+          <div>
+            <strong>FlutterFire CLI</strong>
+            <span class="prereq-sub"> — </span><code>dart pub global activate flutterfire_cli</code>
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-check"><span class="material-symbols-outlined">check</span></div>
+          <div><strong>Android Studio / Xcode</strong><span class="prereq-sub"> — Pour les émulateurs</span></div>
+        </div>
+      </div>
+
+      <h2>Installation</h2>
+
+      <div class="step-block">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Cloner le dépôt</h3>
+          <pre class="code-block"><code><span class="code-comment"># Cloner le projet</span>
+git clone https://github.com/your-org/leftover-roulette.git
+cd leftover-roulette</code></pre>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Installer les dépendances</h3>
+          <pre class="code-block"><code>flutter pub get</code></pre>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Configurer Firebase</h3>
+          <p>Connecte-toi et génère le fichier <code>firebase_options.dart</code> :</p>
+          <pre class="code-block"><code><span class="code-comment"># Connexion Firebase</span>
+firebase login
+
+<span class="code-comment"># Configure FlutterFire (génère lib/firebase_options.dart)</span>
+flutterfire configure --project=leftover-roulette-app</code></pre>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Variables d'environnement</h3>
+          <p>Crée un fichier <code>.env</code> à la racine du projet :</p>
+          <pre class="code-block"><code><span class="code-comment"># .env — ne jamais committer ce fichier</span>
+FIREBASE_API_KEY=your_api_key
+FIREBASE_PROJECT_ID=leftover-roulette-app
+FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+FIREBASE_APP_ID=your_app_id</code></pre>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h3>Lancer l'application</h3>
+          <pre class="code-block"><code><span class="code-comment"># Lister les devices disponibles</span>
+flutter devices
+
+<span class="code-comment"># Lancer (Android/iOS)</span>
+flutter run
+
+<span class="code-comment"># Lancer en mode Web</span>
+flutter run -d chrome
+
+<span class="code-comment"># Build release Android</span>
+flutter build apk --release</code></pre>
+        </div>
+      </div>
+
+      <h2>Seeder Firestore</h2>
+      <p>Pour peupler la base avec les recettes de démonstration :</p>
+      <pre class="code-block"><code><span class="code-comment"># Depuis le dossier scripts/</span>
+cd scripts
+npm install
+node seed-firestore.js</code></pre>
+
+      <div class="callout callout-warning">
+        <span class="material-symbols-outlined callout-icon">warning</span>
+        <div>
+          <strong>Important</strong> — Ne jamais committer <code>google-services.json</code>, <code>GoogleService-Info.plist</code> ou <code>.env</code>. Ces fichiers sont dans <code>.gitignore</code> par défaut.
+        </div>
+      </div>
+
+      <div class="next-section-link" onclick="navigateTo('features')">
+        Suivant&nbsp;: Features
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — FEATURES
+         ========================================================= -->
+    <section id="features" class="doc-section">
+
+      <div class="section-badge">Produit</div>
+      <h1 class="section-title">Features</h1>
+      <p class="section-subtitle">Détail du fonctionnement de chaque feature — de l'algorithme de matching à la génération de liste de courses.</p>
+
+      <h2>Smart Matching — L'algorithme</h2>
+      <p>Le cœur de l'app. Quand l'utilisateur saisit ses ingrédients, le moteur calcule un score de correspondance pour chaque recette Firestore et retourne les meilleurs résultats triés par pertinence.</p>
+
+      <div class="algo-flow">
+        <div class="algo-step">
+          <div class="algo-step-icon"><span class="material-symbols-outlined">input</span></div>
+          <div class="algo-step-text"><strong>Input</strong><span>Ingrédients utilisateur</span></div>
+        </div>
+        <div class="algo-arrow">→</div>
+        <div class="algo-step">
+          <div class="algo-step-icon"><span class="material-symbols-outlined">manage_search</span></div>
+          <div class="algo-step-text"><strong>Normalisation</strong><span>Lowercase + fuzzy</span></div>
+        </div>
+        <div class="algo-arrow">→</div>
+        <div class="algo-step">
+          <div class="algo-step-icon"><span class="material-symbols-outlined">percent</span></div>
+          <div class="algo-step-text"><strong>Score</strong><span>match / total × 100</span></div>
+        </div>
+        <div class="algo-arrow">→</div>
+        <div class="algo-step">
+          <div class="algo-step-icon"><span class="material-symbols-outlined">sort</span></div>
+          <div class="algo-step-text"><strong>Tri</strong><span>Score décroissant</span></div>
+        </div>
+      </div>
+
+      <h3>Formule de calcul du score</h3>
+      <div class="formula-block">
+        <span class="formula-text">score&nbsp;= (ingrédients_matchés&nbsp;/&nbsp;total_ingrédients_recette)&nbsp;×&nbsp;100</span>
+      </div>
+
+      <pre class="code-block"><code><span class="code-comment">// lib/domain/use_cases/match_recipes_use_case.dart</span>
+<span class="code-keyword">class</span> <span class="code-type">MatchRecipesUseCase</span> {
+  <span class="code-type">List</span>&lt;<span class="code-type">RecipeMatch</span>&gt; execute(
+    <span class="code-type">List</span>&lt;<span class="code-type">String</span>&gt; userIngredients,
+    <span class="code-type">List</span>&lt;<span class="code-type">Recipe</span>&gt;   recipes,
+  ) {
+    <span class="code-keyword">return</span> recipes
+      .map((recipe) {
+        <span class="code-keyword">final</span> matched = recipe.ingredients
+          .where((i) =&gt; _fuzzyMatch(i.name, userIngredients))
+          .toList();
+
+        <span class="code-keyword">return</span> <span class="code-type">RecipeMatch</span>(
+          recipe:              recipe,
+          matchScore:          matched.length / recipe.ingredients.length,
+          matchedIngredients:  matched,
+          missingIngredients:  recipe.ingredients.where((i) =&gt; !matched.contains(i)).toList(),
+        );
+      })
+      .where((m) =&gt; m.matchScore &gt; 0.3)   <span class="code-comment">// seuil minimum 30%</span>
+      .toList()
+      ..sort((a, b) =&gt; b.matchScore.compareTo(a.matchScore));
+  }
+
+  <span class="code-keyword">bool</span> _fuzzyMatch(<span class="code-type">String</span> ingredient, <span class="code-type">List</span>&lt;<span class="code-type">String</span>&gt; userList) {
+    <span class="code-keyword">final</span> normalized = ingredient.toLowerCase().trim();
+    <span class="code-keyword">return</span> userList.any((u) =&gt; normalized.contains(u.toLowerCase()) ||
+                                    u.toLowerCase().contains(normalized));
+  }
+}</code></pre>
+
+      <h2>Mécanique Roulette</h2>
+      <p>Le bouton "Spin the Roulette" déclenche une animation simulant un tirage au sort, avant de révéler le meilleur match. Le résultat est déterministe mais l'UX crée un effet de suspense.</p>
+
+      <div class="feature-detail-card">
+        <div class="feature-detail-icon"><span class="material-symbols-outlined">casino</span></div>
+        <div>
+          <h3>Séquence d'animation</h3>
+          <ol class="feature-list">
+            <li>Shake animation sur le bouton CTA (300ms)</li>
+            <li>Écran "spinning" — ingrédients qui défilent en boucle (1.5s)</li>
+            <li>Slow-down progressif et reveal du nom de la recette gagnante</li>
+            <li>Navigation vers la page Résultat avec slide-up transition</li>
+          </ol>
+        </div>
+      </div>
+
+      <h2>Shopping List Generation</h2>
+      <p>Les ingrédients manquants de la page Résultat peuvent être ajoutés à la liste de courses. La liste est persistée dans Firestore et synchronisée en temps réel sur tous les devices de l'utilisateur.</p>
+
+      <div class="feature-detail-card">
+        <div class="feature-detail-icon"><span class="material-symbols-outlined">shopping_basket</span></div>
+        <div>
+          <h3>Comportement</h3>
+          <ol class="feature-list">
+            <li>Tap "Add to List" → item ajouté à <code>/users/{uid}/shoppingLists/{listId}/items</code></li>
+            <li>Checkbox cochée → champ <code>checked: true</code> mis à jour en temps réel via Firestore stream</li>
+            <li>Badge sur l'icône Shopping (nombre d'items non cochés)</li>
+            <li>Reset automatique de la liste après "Start Cooking Now"</li>
+          </ol>
+        </div>
+      </div>
+
+      <h2>Zero Waste Score</h2>
+      <p>Score estimant le ratio d'ingrédients utilisés vs gaspillés. Affiché sur la Home et dans la page Résultat pour sensibiliser à l'impact alimentaire.</p>
+      <pre class="code-block"><code><span class="code-comment">// Score simplifié — peut être enrichi avec un modèle ML</span>
+wasteScore = (ingrédients_utilisés / ingrédients_possédés) × 100</code></pre>
+
+      <div class="next-section-link" onclick="navigateTo('screens')">
+        Suivant&nbsp;: Screens
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — SCREENS
+         ========================================================= -->
+    <section id="screens" class="doc-section">
+
+      <div class="section-badge">Produit</div>
+      <h1 class="section-title">Screens</h1>
+      <p class="section-subtitle">Les 4 écrans principaux de l'application, interactifs et navigables — prévisualisés dans un mockup iPhone.</p>
+
+      <!-- Tabs -->
+      <div class="screen-tabs">
+        <button class="screen-tab active" onclick="switchScreen('home', this)">
+          <span class="material-symbols-outlined">casino</span>Home
+        </button>
+        <button class="screen-tab" onclick="switchScreen('result', this)">
+          <span class="material-symbols-outlined">fact_check</span>Résultat
+        </button>
+        <button class="screen-tab" onclick="switchScreen('shopping', this)">
+          <span class="material-symbols-outlined">shopping_basket</span>Shopping
+        </button>
+        <button class="screen-tab" onclick="switchScreen('cooking', this)">
+          <span class="material-symbols-outlined">restaurant</span>Cooking
+        </button>
+      </div>
+
+      <!-- Phone + Description -->
+      <div class="screens-content">
+
+        <div class="phone-wrapper">
+          <div class="phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <iframe id="screen-iframe" src="screens/home.html" title="App Screen" loading="lazy"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-description">
+
+          <div id="screen-desc-home" class="screen-desc active">
+            <h3>Home — Spin Screen</h3>
+            <p>L'écran principal. L'utilisateur saisit ses ingrédients disponibles et lance la roulette pour obtenir une suggestion de recette.</p>
+            <ul class="screen-desc-list">
+              <li><strong>Hero éditorial</strong> — "What's in your fridge?" avec fond texturé et icône décorative</li>
+              <li><strong>Input + Add</strong> — Champ de saisie avec bouton d'ajout rapide</li>
+              <li><strong>Chips ingrédients</strong> — Tags supprimables (vert = sélectionné, gris = suggestion)</li>
+              <li><strong>Bento stats</strong> — Waste Reduction % et badge Eco-Friendly avec image</li>
+              <li><strong>CTA principal</strong> — "Spin the Roulette" avec gradient orange et icône casino</li>
+              <li><strong>Trending nearby</strong> — Scroll horizontal de suggestions contextuelles</li>
+            </ul>
+          </div>
+
+          <div id="screen-desc-result" class="screen-desc">
+            <h3>Résultat — Match Screen</h3>
+            <p>Présente la recette correspondant le mieux aux ingrédients saisis, avec le score de matching et les ingrédients manquants.</p>
+            <ul class="screen-desc-list">
+              <li><strong>Match badge</strong> — "MATCH FOUND" en pill verte, nom de la recette en grand titre</li>
+              <li><strong>Image asymétrique</strong> — Photo avec clip-path éditorial et effet hover scale</li>
+              <li><strong>Anneau SVG</strong> — Visualisation du % de correspondance avec icône eco</li>
+              <li><strong>Cook time card</strong> — Card gradient orange avec durée estimée</li>
+              <li><strong>In your pantry</strong> — Ingrédients possédés avec checkmarks verts animés</li>
+              <li><strong>Missing items</strong> — Ingrédients manquants avec bouton "Add to List" contextuel</li>
+              <li><strong>Start Cooking</strong> — CTA gradient, navigue vers l'écran Cooking Steps</li>
+            </ul>
+          </div>
+
+          <div id="screen-desc-shopping" class="screen-desc">
+            <h3>Shopping — Liste de courses</h3>
+            <p>Liste de courses générée automatiquement à partir des ingrédients manquants, persistée sur Firestore.</p>
+            <ul class="screen-desc-list">
+              <li><strong>Current Mission</strong> — Items manquants de la recette active avec catégorie</li>
+              <li><strong>Checkboxes animées</strong> — État synchronisé en temps réel avec Firestore</li>
+              <li><strong>Catégories</strong> — Ingrédients groupés par rayon (Dough & Pastry, Proteins…)</li>
+              <li><strong>Frequent Items grid</strong> — Suggestions basées sur l'historique utilisateur</li>
+              <li><strong>Waste card promo</strong> — Score de réduction de gaspillage de la session en cours</li>
+            </ul>
+          </div>
+
+          <div id="screen-desc-cooking" class="screen-desc">
+            <h3>Cooking Steps — Mode cuisine</h3>
+            <p>Instructions pas-à-pas adaptées aux ingrédients disponibles. Conçu pour être lisible à distance et mains sales.</p>
+            <ul class="screen-desc-list">
+              <li><strong>Chef's Pick badge</strong> — Indicateur de recette recommandée par le moteur</li>
+              <li><strong>Hero asymétrique</strong> — Image avec clip-path arrondi gauche et effet éditorial</li>
+              <li><strong>Bento stats</strong> — Waste Saved % et nombre de portions (2–4)</li>
+              <li><strong>Start Cooking</strong> — Bouton qui lance un minuteur intégré</li>
+              <li><strong>Étapes numérotées</strong> — Cards avec grand chiffre décoratif en arrière-plan</li>
+              <li><strong>Pro tip</strong> — Conseil contextuel basé sur les ingrédients possédés</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="next-section-link" onclick="navigateTo('architecture')">
+        Suivant&nbsp;: Architecture
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — ARCHITECTURE
+         ========================================================= -->
+    <section id="architecture" class="doc-section">
+
+      <div class="section-badge">Technique</div>
+      <h1 class="section-title">Architecture</h1>
+      <p class="section-subtitle">Structure du projet Flutter, patterns architecturaux et organisation en couches applicatives indépendantes.</p>
+
+      <h2>Clean Architecture — 3 couches</h2>
+      <div class="arch-layers">
+        <div class="arch-layer arch-layer-presentation">
+          <div class="arch-layer-label">🖥 Presentation Layer</div>
+          <div class="arch-layer-content">
+            <span class="arch-tag">Screens</span>
+            <span class="arch-tag">Widgets</span>
+            <span class="arch-tag">Riverpod Providers</span>
+            <span class="arch-tag">GoRouter</span>
+            <span class="arch-tag">Route Guards</span>
+          </div>
+        </div>
+        <div class="arch-arrow-down">↕</div>
+        <div class="arch-layer arch-layer-domain">
+          <div class="arch-layer-label">🧠 Domain Layer</div>
+          <div class="arch-layer-content">
+            <span class="arch-tag">Entities</span>
+            <span class="arch-tag">Repository Interfaces</span>
+            <span class="arch-tag">Use Cases</span>
+            <span class="arch-tag">Business Logic</span>
+          </div>
+        </div>
+        <div class="arch-arrow-down">↕</div>
+        <div class="arch-layer arch-layer-data">
+          <div class="arch-layer-label">🗄 Data Layer</div>
+          <div class="arch-layer-content">
+            <span class="arch-tag">Firebase Services</span>
+            <span class="arch-tag">Repository Implementations</span>
+            <span class="arch-tag">DTOs &amp; Mappers</span>
+            <span class="arch-tag">Local Cache</span>
+          </div>
+        </div>
+      </div>
+
+      <h2>Structure des dossiers</h2>
+      <pre class="code-block"><code>lib/
+├── <span class="code-comment">core/</span>
+│   ├── constants/
+│   │   ├── app_colors.dart
+│   │   └── app_strings.dart
+│   ├── errors/
+│   │   └── failures.dart
+│   ├── router/
+│   │   └── app_router.dart          <span class="code-comment">// GoRouter — routes &amp; guards</span>
+│   └── utils/
+│       └── string_normalizer.dart   <span class="code-comment">// normalisation fuzzy matching</span>
+│
+├── <span class="code-comment">data/</span>
+│   ├── datasources/
+│   │   ├── firebase_recipe_source.dart
+│   │   └── firebase_shopping_source.dart
+│   ├── models/                      <span class="code-comment">// DTOs — sérialisables JSON/Firestore</span>
+│   │   ├── recipe_model.dart
+│   │   ├── ingredient_model.dart
+│   │   └── shopping_item_model.dart
+│   └── repositories/
+│       ├── recipe_repository_impl.dart
+│       └── shopping_repository_impl.dart
+│
+├── <span class="code-comment">domain/</span>
+│   ├── entities/                    <span class="code-comment">// Pure Dart — pas de dépendances Firebase</span>
+│   │   ├── recipe.dart
+│   │   ├── ingredient.dart
+│   │   └── recipe_match.dart
+│   ├── repositories/                <span class="code-comment">// Interfaces abstraites</span>
+│   │   ├── recipe_repository.dart
+│   │   └── shopping_repository.dart
+│   └── use_cases/
+│       ├── match_recipes_use_case.dart
+│       ├── get_recipes_use_case.dart
+│       └── add_to_shopping_list_use_case.dart
+│
+└── <span class="code-comment">presentation/</span>
+    ├── providers/
+    │   ├── ingredient_provider.dart
+    │   ├── recipe_match_provider.dart
+    │   └── shopping_list_provider.dart
+    ├── screens/
+    │   ├── home/
+    │   │   ├── home_screen.dart
+    │   │   └── widgets/
+    │   │       ├── ingredient_chip.dart
+    │   │       └── trending_card.dart
+    │   ├── result/
+    │   │   ├── result_screen.dart
+    │   │   └── widgets/
+    │   │       ├── match_ring.dart          <span class="code-comment">// SVG progress circle</span>
+    │   │       └── ingredient_list_item.dart
+    │   ├── shopping/
+    │   │   ├── shopping_screen.dart
+    │   │   └── widgets/
+    │   │       └── shopping_item_tile.dart
+    │   └── cooking/
+    │       ├── cooking_screen.dart
+    │       └── widgets/
+    │           ├── recipe_step_card.dart
+    │           └── cooking_timer.dart
+    └── theme/
+        ├── app_theme.dart
+        └── color_scheme.dart</code></pre>
+
+      <h2>Packages principaux</h2>
+      <div class="packages-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Usage</th>
+              <th>Version</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>flutter_riverpod</code></td><td>State management</td><td>^2.4.0</td></tr>
+            <tr><td><code>firebase_core</code></td><td>Init Firebase</td><td>^2.24.0</td></tr>
+            <tr><td><code>cloud_firestore</code></td><td>Base de données NoSQL</td><td>^4.13.0</td></tr>
+            <tr><td><code>firebase_auth</code></td><td>Authentification</td><td>^4.15.0</td></tr>
+            <tr><td><code>firebase_storage</code></td><td>Images recettes</td><td>^11.5.0</td></tr>
+            <tr><td><code>go_router</code></td><td>Navigation déclarative</td><td>^12.1.0</td></tr>
+            <tr><td><code>google_sign_in</code></td><td>Connexion Google</td><td>^6.1.0</td></tr>
+            <tr><td><code>cached_network_image</code></td><td>Cache images réseau</td><td>^3.3.0</td></tr>
+            <tr><td><code>shared_preferences</code></td><td>Stockage local léger</td><td>^2.2.0</td></tr>
+            <tr><td><code>flutter_dotenv</code></td><td>Variables d'environnement</td><td>^5.1.0</td></tr>
+            <tr><td><code>freezed</code></td><td>Immutabilité &amp; union types</td><td>^2.4.0</td></tr>
+            <tr><td><code>json_annotation</code></td><td>Sérialisation JSON</td><td>^4.8.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="next-section-link" onclick="navigateTo('firebase')">
+        Suivant&nbsp;: Firebase
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — FIREBASE
+         ========================================================= -->
+    <section id="firebase" class="doc-section">
+
+      <div class="section-badge">Technique</div>
+      <h1 class="section-title">Firebase</h1>
+      <p class="section-subtitle">Schéma Firestore, collections de données, règles de sécurité et services Firebase utilisés dans l'app.</p>
+
+      <h2>Services utilisés</h2>
+      <div class="firebase-services">
+        <div class="firebase-service">
+          <span class="material-symbols-outlined service-icon">database</span>
+          <div>
+            <strong>Cloud Firestore</strong>
+            <span>Base NoSQL temps réel, sync offline</span>
+          </div>
+        </div>
+        <div class="firebase-service">
+          <span class="material-symbols-outlined service-icon">lock</span>
+          <div>
+            <strong>Firebase Auth</strong>
+            <span>Email/Password + Google Sign-In</span>
+          </div>
+        </div>
+        <div class="firebase-service">
+          <span class="material-symbols-outlined service-icon">image</span>
+          <div>
+            <strong>Firebase Storage</strong>
+            <span>Images des recettes (JPEG optimisé)</span>
+          </div>
+        </div>
+      </div>
+
+      <h2>Schéma Firestore</h2>
+
+      <!-- users -->
+      <div class="collection-card">
+        <div class="collection-header">
+          <div class="collection-icon"><span class="material-symbols-outlined">person</span></div>
+          <div>
+            <h3>users</h3>
+            <span class="collection-path">/users/{userId}</span>
+          </div>
+        </div>
+        <pre class="code-block code-block-sm"><code>{
+  "uid":         "string",
+  "email":       "string",
+  "displayName": "string",
+  "photoURL":    "string | null",
+  "createdAt":   "Timestamp",
+  "preferences": {
+    "dietaryRestrictions": ["vegetarian", "gluten-free"],
+    "maxIngredients": 5,
+    "language": "fr"
+  },
+  "stats": {
+    "totalSpins":    42,
+    "wasteReduced":  75.3    <span class="code-comment">// pourcentage cumulé</span>
+  }
+}</code></pre>
+      </div>
+
+      <!-- recipes -->
+      <div class="collection-card">
+        <div class="collection-header">
+          <div class="collection-icon"><span class="material-symbols-outlined">menu_book</span></div>
+          <div>
+            <h3>recipes</h3>
+            <span class="collection-path">/recipes/{recipeId}</span>
+          </div>
+        </div>
+        <pre class="code-block code-block-sm"><code>{
+  "id":              "string",
+  "name":            "Quiche Lorraine",
+  "imageUrl":        "string",
+  "cookTimeMinutes": 45,
+  "servings":        { "min": 2, "max": 4 },
+  "difficulty":      "intermediate",     <span class="code-comment">// easy | intermediate | hard</span>
+  "tags":            ["french", "savory", "oven"],
+  "ingredients": [
+    {
+      "name":     "lardons",
+      "amount":   "150g",
+      "category": "proteins",            <span class="code-comment">// proteins | dairy | produce | pantry | pastry</span>
+      "aliases":  ["bacon", "pancetta"]  <span class="code-comment">// pour le fuzzy matching</span>
+    }
+  ],
+  "steps": [
+    {
+      "order":           1,
+      "title":           "Prep &amp; Pre-bake",
+      "description":     "string",
+      "durationMinutes": 10
+    }
+  ],
+  "createdAt": "Timestamp"
+}</code></pre>
+      </div>
+
+      <!-- shoppingLists -->
+      <div class="collection-card">
+        <div class="collection-header">
+          <div class="collection-icon"><span class="material-symbols-outlined">shopping_cart</span></div>
+          <div>
+            <h3>shoppingLists</h3>
+            <span class="collection-path">/users/{userId}/shoppingLists/{listId}</span>
+          </div>
+        </div>
+        <pre class="code-block code-block-sm"><code>{
+  "id":           "string",
+  "recipeId":     "string",
+  "recipeName":   "Quiche Lorraine",
+  "createdAt":    "Timestamp",
+  "completedAt":  "Timestamp | null",
+  "items": [
+    {
+      "id":       "string",
+      "name":     "Pie Crust",
+      "category": "Dough &amp; Pastry",
+      "checked":  false,
+      "addedAt":  "Timestamp"
+    }
+  ]
+}</code></pre>
+      </div>
+
+      <h2>Security Rules</h2>
+      <pre class="code-block"><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    <span class="code-comment">// Recettes — lecture publique, écriture admin seulement</span>
+    match /recipes/{recipeId} {
+      allow read:  if true;
+      allow write: if request.auth != null
+                   &amp;&amp; request.auth.token.admin == true;
+    }
+
+    <span class="code-comment">// Données utilisateur — accès uniquement à son propre doc</span>
+    match /users/{userId} {
+      allow read, write: if request.auth != null
+                         &amp;&amp; request.auth.uid == userId;
+
+      <span class="code-comment">// Listes de courses — sous-collection privée</span>
+      match /shoppingLists/{listId} {
+        allow read, write: if request.auth != null
+                           &amp;&amp; request.auth.uid == userId;
+      }
+    }
+  }
+}</code></pre>
+
+      <div class="callout callout-info">
+        <span class="material-symbols-outlined callout-icon">info</span>
+        <div>
+          <strong>Offline support</strong> — Firestore est configuré en mode <code>persistenceEnabled: true</code> pour permettre la consultation et la modification de la liste de courses hors connexion, avec sync automatique au retour réseau.
+        </div>
+      </div>
+
+      <div class="next-section-link" onclick="navigateTo('design')">
+        Suivant&nbsp;: Design System
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         SECTION — DESIGN SYSTEM
+         ========================================================= -->
+    <section id="design" class="doc-section">
+
+      <div class="section-badge">Design</div>
+      <h1 class="section-title">Design System</h1>
+      <p class="section-subtitle">Palette Material Design 3, typographie et composants UI réutilisables — cohérents sur toutes les pages de l'app.</p>
+
+      <h2>Palette de couleurs</h2>
+      <div class="color-grid">
+        <div class="color-swatch" style="background:#a83206;">
+          <div class="color-name">Primary</div><div class="color-hex">#a83206</div>
+        </div>
+        <div class="color-swatch" style="background:#ff784e;">
+          <div class="color-name">Primary Container</div><div class="color-hex">#ff784e</div>
+        </div>
+        <div class="color-swatch" style="background:#0c6a24;">
+          <div class="color-name">Secondary</div><div class="color-hex">#0c6a24</div>
+        </div>
+        <div class="color-swatch" style="background:#9ff79f;">
+          <div class="color-name" style="color:#005f1d;">Secondary Container</div>
+          <div class="color-hex" style="color:#1a6a2a;">#9ff79f</div>
+        </div>
+        <div class="color-swatch" style="background:#843d99;">
+          <div class="color-name">Tertiary</div><div class="color-hex">#843d99</div>
+        </div>
+        <div class="color-swatch" style="background:#f7f7f2;border:1px solid #dcddd7;">
+          <div class="color-name" style="color:#2d2f2c;">Surface</div>
+          <div class="color-hex" style="color:#5a5c58;">#f7f7f2</div>
+        </div>
+        <div class="color-swatch" style="background:#2d2f2c;">
+          <div class="color-name">On Surface</div><div class="color-hex">#2d2f2c</div>
+        </div>
+        <div class="color-swatch" style="background:#b31b25;">
+          <div class="color-name">Error</div><div class="color-hex">#b31b25</div>
+        </div>
+      </div>
+
+      <h2>Typographie</h2>
+      <div class="type-showcase">
+        <div class="type-row">
+          <div class="type-meta">
+            <span class="type-role">Display / H1</span>
+            <span class="type-spec">Plus Jakarta Sans — ExtraBold 800</span>
+          </div>
+          <div class="type-sample" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;line-height:1.1;">What's in your fridge?</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <span class="type-role">Headline / H2</span>
+            <span class="type-spec">Plus Jakarta Sans — Bold 700</span>
+          </div>
+          <div class="type-sample" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.5rem;">Quiche Lorraine</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <span class="type-role">Body</span>
+            <span class="type-spec">Inter — Regular 400</span>
+          </div>
+          <div class="type-sample" style="font-family:'Inter',sans-serif;font-weight:400;">Turn those lonely leftovers into a culinary masterpiece with one spin.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">
+            <span class="type-role">Label / Chip</span>
+            <span class="type-spec">Inter — SemiBold 600</span>
+          </div>
+          <div class="type-sample" style="font-family:'Inter',sans-serif;font-weight:600;font-size:0.8125rem;text-transform:uppercase;letter-spacing:.06em;color:#5a5c58;">IN YOUR PANTRY · 4 MATCHES FOUND</div>
+        </div>
+      </div>
+
+      <h2>Composants</h2>
+
+      <!-- Buttons -->
+      <div class="component-section">
+        <h3>Buttons</h3>
+        <div class="component-preview">
+          <button class="comp-btn comp-btn-primary">
+            <span class="material-symbols-outlined" style="font-size:17px;">casino</span>
+            Spin the Roulette
+          </button>
+          <button class="comp-btn comp-btn-secondary">Secondary</button>
+          <button class="comp-btn comp-btn-outlined">Outlined</button>
+          <button class="comp-btn comp-btn-ghost">
+            <span class="material-symbols-outlined" style="font-size:17px;">refresh</span>
+            Spin Again
+          </button>
+        </div>
+      </div>
+
+      <!-- Chips -->
+      <div class="component-section">
+        <h3>Input Chips</h3>
+        <div class="component-preview">
+          <div class="comp-chip comp-chip-active">Half onion <span class="material-symbols-outlined" style="font-size:14px;">close</span></div>
+          <div class="comp-chip comp-chip-active">Soy sauce <span class="material-symbols-outlined" style="font-size:14px;">close</span></div>
+          <div class="comp-chip comp-chip-muted">Chicken breast <span class="material-symbols-outlined" style="font-size:14px;">close</span></div>
+        </div>
+      </div>
+
+      <!-- Ingredient items -->
+      <div class="component-section">
+        <h3>Ingredient List Items</h3>
+        <div class="component-preview comp-preview-col">
+          <div class="comp-ingredient comp-ingredient-owned">
+            <div class="comp-ingredient-icon comp-ingredient-owned-icon">
+              <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">check_circle</span>
+            </div>
+            <span style="font-weight:600;">Cream cheese</span>
+          </div>
+          <div class="comp-ingredient comp-ingredient-missing">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div class="comp-ingredient-icon comp-ingredient-missing-icon">
+                <span class="material-symbols-outlined" style="font-size:18px;">add</span>
+              </div>
+              <span style="font-weight:600;">Pie crust</span>
+            </div>
+            <button class="comp-add-btn">Add to List</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Border radius -->
+      <div class="component-section">
+        <h3>Border Radius</h3>
+        <div class="component-preview">
+          <div class="comp-radius-item"><div style="width:40px;height:40px;background:#a83206;border-radius:4px;"></div>4px — default</div>
+          <div class="comp-radius-item"><div style="width:40px;height:40px;background:#a83206;border-radius:8px;"></div>8px — lg</div>
+          <div class="comp-radius-item"><div style="width:40px;height:40px;background:#a83206;border-radius:12px;"></div>12px — xl</div>
+          <div class="comp-radius-item"><div style="width:40px;height:40px;background:#a83206;border-radius:24px;"></div>24px — 2xl</div>
+          <div class="comp-radius-item"><div style="width:40px;height:40px;background:#a83206;border-radius:9999px;"></div>full</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('overlay');
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.doc-section');
+
+    window.toggleSidebar = () => { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); };
+    window.closeSidebar  = () => { sidebar.classList.remove('open'); overlay.classList.remove('active'); };
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+    });
+
+    const setActive = (id) => {
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.section === id) item.classList.add('active');
+      });
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    sections.forEach(s => observer.observe(s));
+
+    window.navigateTo = (id) => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.switchScreen = (screen, btn) => {
+      const iframe = document.getElementById('screen-iframe');
+      if (iframe) {
+        iframe.style.opacity = '0';
+        iframe.style.transition = 'opacity 0.2s ease';
+        setTimeout(() => { iframe.src = 'screens/' + screen + '.html'; iframe.style.opacity = '1'; }, 200);
+      }
+      document.querySelectorAll('.screen-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.screen-desc').forEach(d => d.classList.remove('active'));
+      const desc = document.getElementById('screen-desc-' + screen);
+      if (desc) desc.classList.add('active');
+    };
+
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        if (!q) {
+          navItems.forEach(i => (i.style.display = ''));
+          document.querySelectorAll('.nav-group').forEach(g => (g.style.display = ''));
+          return;
+        }
+        document.querySelectorAll('.nav-group').forEach(group => {
+          const items = group.querySelectorAll('.nav-item');
+          let visible = 0;
+          items.forEach(item => {
+            const match = item.textContent.toLowerCase().includes(q);
+            item.style.display = match ? '' : 'none';
+            if (match) visible++;
+          });
+          group.style.display = visible === 0 ? 'none' : '';
+        });
+      });
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { searchInput.value = ''; searchInput.dispatchEvent(new Event('input')); }
+      });
+    }
+
+    document.querySelectorAll('.code-block').forEach(block => {
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', () => {
+        const text = (block.querySelector('code') || block).textContent;
+        navigator.clipboard.writeText(text.trim()).then(() => {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        }).catch(() => { btn.textContent = 'Error'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); });
+      });
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+      block.parentNode.insertBefore(wrapper, block);
+      wrapper.appendChild(btn);
+      wrapper.appendChild(block);
+    });
+  });
+</script>
+</body>
+</html>
