@@ -7,6 +7,6 @@ void main() {
   testWidgets('App renders without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(const ProviderScope(child: LeftoverRouletteApp()));
     expect(find.byType(MaterialApp), findsOneWidget);
-    expect(find.text('Home — Spin the Roulette'), findsOneWidget);
+    expect(find.text('Leftover Roulette'), findsOneWidget);
   });
 }
