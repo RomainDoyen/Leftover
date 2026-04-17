@@ -27,11 +27,11 @@ abstract class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.surface,
       textTheme: GoogleFonts.interTextTheme(base.textTheme).copyWith(
-        displayLarge:   GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 40),
-        displayMedium:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 32),
-        headlineLarge:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 28),
-        headlineMedium: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 22),
-        headlineSmall:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 18),
+        displayLarge:   GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 40, color: AppColors.onSurface),
+        displayMedium:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 32, color: AppColors.onSurface),
+        headlineLarge:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 28, color: AppColors.onSurface),
+        headlineMedium: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 22, color: AppColors.onSurface),
+        headlineSmall:  GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 18, color: AppColors.onSurface),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.surfaceContainerLowest,

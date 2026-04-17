@@ -61,7 +61,9 @@ class IngredientListItem extends StatelessWidget {
                 Text(
                   ingredient.name,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 16),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.onSurface),
                 ),
                 if (!owned && ingredient.amount.isNotEmpty)
                   Text(
@@ -85,7 +87,9 @@ class IngredientListItem extends StatelessWidget {
                 child: const Text(
                   'Ajouter',
                   style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w700),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.onSurface),
                 ),
               ),
             ),
