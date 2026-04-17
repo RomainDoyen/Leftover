@@ -110,38 +110,40 @@ class ResultScreen extends ConsumerWidget {
                         ),
                         child: Row(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'MES STOCKS',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 1,
-                                    color: AppColors.onSurfaceVariant,
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'MES STOCKS',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1,
+                                      color: AppColors.onSurfaceVariant,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${match!.matchPercent}%',
-                                  style: const TextStyle(
-                                    color: AppColors.secondary,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 48,
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${match!.matchPercent}%',
+                                    style: const TextStyle(
+                                      color: AppColors.secondary,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 44,
+                                    ),
                                   ),
-                                ),
-                                const Text(
-                                  'de tes ingrédients',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.onSurfaceVariant,
+                                  const Text(
+                                    'de tes ingrédients',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.onSurfaceVariant,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            const Spacer(),
-                            MatchRing(score: match!.matchScore),
+                            const SizedBox(width: 8),
+                            MatchRing(score: match!.matchScore, size: 80),
                           ],
                         ),
                       ),
