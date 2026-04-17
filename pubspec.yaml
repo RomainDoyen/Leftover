@@ -37,6 +37,7 @@ dependencies:
   json_annotation: ^4.9.0
   freezed_annotation: ^2.4.1
   flutter_native_splash: ^2.4.7
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/providers/repository_providers.dart';
 import '../../../core/router/app_router.dart';
 import '../../../presentation/providers/auth_provider.dart';
 import '../../../presentation/providers/ingredient_provider.dart';
@@ -21,7 +22,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _controller = TextEditingController();
-  bool _spinning = false;
+  bool _spinning   = false;
+  bool _generating = false; // true while calling Mistral AI
 
   @override
   void dispose() {
@@ -44,18 +46,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
       return;
     }
+
+    // ── 1. Match dans la base ──────────────────────────────────────────────
     setState(() => _spinning = true);
     await ref.read(recipeMatchProvider.notifier).spin();
-
     if (!mounted) return;
     setState(() => _spinning = false);
+
     final match = ref.read(bestMatchProvider);
     if (match != null) {
       context.push(Routes.result, extra: match);
-    } else {
+      return;
+    }
+
+    // ── 2. Aucune recette trouvée → génération IA ─────────────────────────
+    final canGenerate =
+        ref.read(generateRecipeUseCaseProvider).isAvailable;
+    if (!canGenerate) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Aucune recette trouvée. Essaie d\'autres ingrédients !'),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _generating = true);
+    final generated =
+        await ref.read(recipeMatchProvider.notifier).generate();
+    if (!mounted) return;
+    setState(() => _generating = false);
+
+    if (generated) {
+      final aiMatch = ref.read(bestMatchProvider);
+      if (aiMatch != null && mounted) {
+        context.push(Routes.result, extra: aiMatch);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('L\'IA n\'a pas pu générer de recette. Réessaie !'),
         ),
       );
     }
@@ -143,7 +174,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
                 _BentoStats(ingredientCount: ingredients.length),
                 const SizedBox(height: 24),
-                _SpinButton(spinning: _spinning, onPressed: _spin),
+                _SpinButton(
+                  spinning: _spinning,
+                  generating: _generating,
+                  onPressed: _spin,
+                ),
                 const SizedBox(height: 32),
                 Text(
                   'Tendances du moment',
@@ -374,18 +409,33 @@ class _BentoStats extends StatelessWidget {
 
 class _SpinButton extends StatelessWidget {
   final bool spinning;
+  final bool generating;
   final VoidCallback onPressed;
 
-  const _SpinButton({required this.spinning, required this.onPressed});
+  const _SpinButton({
+    required this.spinning,
+    required this.generating,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final busy  = spinning || generating;
+    final label = generating
+        ? 'L\'IA cuisine…'
+        : spinning
+            ? 'En cours...'
+            : 'Lancer la roulette';
+    final icon = generating
+        ? const Icon(Icons.auto_awesome, color: Colors.white)
+        : const Icon(Icons.casino, color: Colors.white);
+
     return SizedBox(
       width: double.infinity,
       height: 64,
       child: ElevatedButton.icon(
-        onPressed: spinning ? null : onPressed,
-        icon: spinning
+        onPressed: busy ? null : onPressed,
+        icon: busy
             ? const SizedBox(
                 width: 20,
                 height: 20,
@@ -394,9 +444,9 @@ class _SpinButton extends StatelessWidget {
                   color: Colors.white,
                 ),
               )
-            : const Icon(Icons.casino, color: Colors.white),
+            : icon,
         label: Text(
-          spinning ? 'En cours...' : 'Lancer la roulette',
+          label,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,

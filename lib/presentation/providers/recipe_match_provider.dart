@@ -8,6 +8,7 @@ class RecipeMatchNotifier extends AsyncNotifier<List<RecipeMatch>> {
   @override
   Future<List<RecipeMatch>> build() async => [];
 
+  /// Match user ingredients against the recipe database.
   Future<void> spin() async {
     final ingredients = ref.read(ingredientProvider);
     if (ingredients.isEmpty) return;
@@ -15,6 +16,24 @@ class RecipeMatchNotifier extends AsyncNotifier<List<RecipeMatch>> {
     state = await AsyncValue.guard(
       () => ref.read(matchRecipesUseCaseProvider).execute(ingredients),
     );
+  }
+
+  /// Call Mistral AI to generate a recipe when no database match was found.
+  /// Returns true if a recipe was successfully generated.
+  Future<bool> generate() async {
+    final ingredients = ref.read(ingredientProvider);
+    if (ingredients.isEmpty) return false;
+
+    final useCase = ref.read(generateRecipeUseCaseProvider);
+    if (!useCase.isAvailable) return false;
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final match = await useCase.execute(ingredients);
+      return [match];
+    });
+
+    return state.valueOrNull?.isNotEmpty ?? false;
   }
 }
 

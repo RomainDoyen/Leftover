@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/firebase_recipe_source.dart';
+import '../../data/datasources/mistral_recipe_source.dart';
 import '../../data/repositories/mock_recipe_repository.dart';
 import '../../data/repositories/recipe_repository_impl.dart';
 import '../../data/repositories/mock_shopping_repository.dart';
@@ -10,6 +11,7 @@ import '../../data/repositories/shopping_repository_impl.dart';
 import '../../domain/repositories/recipe_repository.dart';
 import '../../domain/repositories/shopping_repository.dart';
 import '../../domain/use_cases/add_to_shopping_list_use_case.dart';
+import '../../domain/use_cases/generate_recipe_use_case.dart';
 import '../../domain/use_cases/match_recipes_use_case.dart';
 
 /// Set USE_FIREBASE=true via --dart-define to use real Firebase.
@@ -41,4 +43,12 @@ final matchRecipesUseCaseProvider = Provider<MatchRecipesUseCase>((ref) {
 
 final addToShoppingListUseCaseProvider = Provider<AddToShoppingListUseCase>((ref) {
   return AddToShoppingListUseCase(ref.watch(shoppingRepositoryProvider));
+});
+
+final mistralRecipeSourceProvider = Provider<MistralRecipeSource>((ref) {
+  return MistralRecipeSource();
+});
+
+final generateRecipeUseCaseProvider = Provider<GenerateRecipeUseCase>((ref) {
+  return GenerateRecipeUseCase(ref.watch(mistralRecipeSourceProvider));
 });
