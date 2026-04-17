@@ -44,6 +44,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Local env / credentials — NEVER commit these
+dart_defines.json
+
 # Firebase / credentials — NEVER commit these
 serviceAccountKey.json
 google-services.json
