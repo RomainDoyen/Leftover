@@ -195,7 +195,7 @@ class ResultScreen extends ConsumerWidget {
                     Text('Ingrédients',
                         style: Theme.of(context).textTheme.headlineSmall),
                     Text(
-                      '${recipe.ingredients.length} items',
+                      '${recipe.ingredients.length} ingrédients',
                       style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.onSurfaceVariant),

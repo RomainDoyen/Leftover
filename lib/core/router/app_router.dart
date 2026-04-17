@@ -74,8 +74,8 @@ class _BottomNav extends StatelessWidget {
   const _BottomNav({required this.currentLocation});
 
   static const _destinations = [
-    (icon: Icons.casino_outlined, filledIcon: Icons.casino,      label: 'Spin',     path: Routes.home),
-    (icon: Icons.shopping_basket_outlined, filledIcon: Icons.shopping_basket, label: 'Shopping', path: Routes.shopping),
+    (icon: Icons.casino_outlined, filledIcon: Icons.casino,      label: 'Lancer',   path: Routes.home),
+    (icon: Icons.shopping_basket_outlined, filledIcon: Icons.shopping_basket, label: 'Courses',  path: Routes.shopping),
   ];
 
   @override

@@ -116,7 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 _SpinButton(spinning: _spinning, onPressed: _spin),
                 const SizedBox(height: 32),
                 Text(
-                  'Trending Near You',
+                  'Tendances du moment',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
@@ -131,13 +131,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 children: const [
                   TrendingCard(
-                    title: 'Kitchen Sink Stir-fry',
-                    subtitle: 'Quick · 20 min · Easy',
+                    title: 'Poêlée Frigo Express',
+                    subtitle: 'Rapide · 20 min · Facile',
                   ),
                   SizedBox(width: 16),
                   TrendingCard(
-                    title: 'Umami Leftover Melt',
-                    subtitle: 'Comfort · 15 min · Easy',
+                    title: 'Toast Umami Fondu',
+                    subtitle: 'Réconfort · 15 min · Facile',
                   ),
                 ],
               ),
@@ -170,7 +170,7 @@ class _HeroCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "What's in\nyour fridge?",
+                "Qu'est-ce qu'il y a\ndans ton frigo ?",
                 style: Theme.of(context).textTheme.displayMedium?.copyWith(
                       color: AppColors.onSurface,
                       height: 1.1,
@@ -178,7 +178,7 @@ class _HeroCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Turn those lonely leftovers into a culinary masterpiece.',
+                'Transforme tes restes en un plat savoureux.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
@@ -282,14 +282,14 @@ class _BentoStats extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    'WASTE REDUCTION',
+                    'ANTIGASPILLAGE',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: AppColors.onSurfaceVariant,
                           letterSpacing: 1,
                         ),
                   ),
                   Text(
-                    'Estimated impact',
+                    'Impact estimé',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.onSurfaceVariant,
                           fontSize: 11,
@@ -319,14 +319,14 @@ class _BentoStats extends StatelessWidget {
                   const Icon(Icons.eco, color: AppColors.primary, size: 32),
                   const Spacer(),
                   Text(
-                    'ECO FRIENDLY',
+                    'ÉCO-RESPONSABLE',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: AppColors.onSurfaceVariant,
                           letterSpacing: 1,
                         ),
                   ),
                   Text(
-                    'Locally sourced',
+                    'Produits locaux',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.onSurfaceVariant,
                           fontSize: 11,
@@ -366,7 +366,7 @@ class _SpinButton extends StatelessWidget {
               )
             : const Icon(Icons.casino, color: Colors.white),
         label: Text(
-          spinning ? 'Spinning...' : 'Spin the Roulette',
+          spinning ? 'En cours...' : 'Lancer la roulette',
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,

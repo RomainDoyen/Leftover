@@ -15,7 +15,7 @@ class MockRecipeRepository implements RecipeRepository {
       cookTimeMinutes: 45,
       servingsMin: 2,
       servingsMax: 4,
-      difficulty: 'intermediate',
+      difficulty: 'intermédiaire',
       tags: ['french', 'savory', 'oven'],
       ingredients: [
         Ingredient(name: 'oignon', amount: '1 demi', category: 'produce', aliases: ['onion']),
@@ -32,11 +32,11 @@ class MockRecipeRepository implements RecipeRepository {
     ),
     Recipe(
       id: 'stir-fry',
-      name: 'Kitchen Sink Stir-fry',
+      name: 'Poêlée Frigo Express',
       cookTimeMinutes: 20,
       servingsMin: 2,
       servingsMax: 3,
-      difficulty: 'easy',
+      difficulty: 'facile',
       tags: ['asian', 'quick', 'wok'],
       ingredients: [
         Ingredient(name: 'sauce soja', amount: '3 cuil.', category: 'pantry', aliases: ['soy sauce', 'shoyu']),
@@ -52,11 +52,11 @@ class MockRecipeRepository implements RecipeRepository {
     ),
     Recipe(
       id: 'cheesy-melt',
-      name: 'Umami Leftover Melt',
+      name: 'Toast Umami Fondu',
       cookTimeMinutes: 15,
       servingsMin: 1,
       servingsMax: 2,
-      difficulty: 'easy',
+      difficulty: 'facile',
       tags: ['comfort', 'quick', 'toast'],
       ingredients: [
         Ingredient(name: 'fromage frais', amount: '100g', category: 'dairy', aliases: ['cream cheese', 'philadelphia', 'fromage', 'cheese']),
