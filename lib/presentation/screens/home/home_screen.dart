@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/router/app_router.dart';
+import '../../../presentation/providers/auth_provider.dart';
 import '../../../presentation/providers/ingredient_provider.dart';
 import '../../../presentation/providers/recipe_match_provider.dart';
 import '../../../presentation/theme/app_colors.dart';
 import 'widgets/ingredient_chip.dart';
 import 'widgets/trending_card.dart';
+
+const _useFirebase = bool.fromEnvironment('USE_FIREBASE');
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -78,11 +81,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.account_circle_outlined),
-                color: AppColors.primary,
-                onPressed: () {},
-              ),
+              if (_useFirebase)
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  color: AppColors.primary,
+                  tooltip: 'Se déconnecter',
+                  onPressed: () async {
+                    await ref
+                        .read(authNotifierProvider.notifier)
+                        .signOut();
+                  },
+                )
+              else
+                IconButton(
+                  icon: const Icon(Icons.account_circle_outlined),
+                  color: AppColors.primary,
+                  onPressed: () {},
+                ),
             ],
           ),
           SliverPadding(

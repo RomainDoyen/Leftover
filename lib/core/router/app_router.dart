@@ -1,13 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/recipe_match.dart';
+import '../../presentation/providers/auth_provider.dart';
+import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/result/result_screen.dart';
 import '../../presentation/screens/shopping/shopping_screen.dart';
 import '../../presentation/screens/cooking/cooking_screen.dart';
 
+const _useFirebase = bool.fromEnvironment('USE_FIREBASE');
+
 abstract class Routes {
+  static const auth     = '/auth';
   static const home     = '/';
   static const result   = '/result';
   static const shopping = '/shopping';
@@ -15,13 +21,31 @@ abstract class Routes {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
+  // Re-evaluate redirects whenever auth state changes (Firebase mode only).
+  final refreshListenable =
+      _useFirebase ? ref.watch(authChangeNotifierProvider) : null;
+
   return GoRouter(
     initialLocation: Routes.home,
+    refreshListenable: refreshListenable,
+    redirect: _useFirebase
+        ? (context, state) {
+            final user = FirebaseAuth.instance.currentUser;
+            final onAuth = state.matchedLocation == Routes.auth;
+            if (user == null && !onAuth) return Routes.auth;
+            if (user != null && onAuth) return Routes.home;
+            return null;
+          }
+        : null,
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(title: const Text('Erreur')),
       body: const Center(child: Text('Page introuvable')),
     ),
     routes: [
+      GoRoute(
+        path: Routes.auth,
+        builder: (context, state) => const AuthScreen(),
+      ),
       ShellRoute(
         builder: (context, state, child) => _AppShell(child: child),
         routes: [
