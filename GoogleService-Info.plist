@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>380750539605-fd0iolpa5s4hrl72d02kieikfrdl7emp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.380750539605-fd0iolpa5s4hrl72d02kieikfrdl7emp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD6Jh9-L6Kz6wnZpubwSU64j07kKw-kXrs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>380750539605</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.leftover.leftoverRoulette</string>
+	<key>PROJECT_ID</key>
+	<string>leftover-roulette</string>
+	<key>STORAGE_BUCKET</key>
+	<string>leftover-roulette.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:380750539605:ios:0f3543bbbce17298785ddc</string>
+</dict>
+</plist>
