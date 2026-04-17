@@ -16,16 +16,16 @@ class FirebaseRecipeSource {
     final data = doc.data() as Map<String, dynamic>;
     return Recipe(
       id: doc.id,
-      name: data['name'] as String,
+      name: data['name'] as String? ?? (throw FormatException('Recipe ${doc.id} missing field: name')),
       imageUrl: data['imageUrl'] as String?,
-      cookTimeMinutes: (data['cookTimeMinutes'] as num).toInt(),
+      cookTimeMinutes: (data['cookTimeMinutes'] as num?)?.toInt() ?? 30,
       servingsMin: (data['servings']?['min'] as num? ?? 2).toInt(),
       servingsMax: (data['servings']?['max'] as num? ?? 4).toInt(),
       difficulty: data['difficulty'] as String? ?? 'easy',
       tags: List<String>.from(data['tags'] ?? []),
       ingredients: (data['ingredients'] as List<dynamic>? ?? [])
           .map((i) => Ingredient(
-                name: i['name'] as String,
+                name: i['name'] as String? ?? (throw FormatException('Ingredient in ${doc.id} missing field: name')),
                 amount: i['amount'] as String? ?? '',
                 category: i['category'] as String? ?? 'pantry',
                 aliases: List<String>.from(i['aliases'] ?? []),
@@ -33,9 +33,9 @@ class FirebaseRecipeSource {
           .toList(),
       steps: (data['steps'] as List<dynamic>? ?? [])
           .map((s) => RecipeStep(
-                order: (s['order'] as num).toInt(),
-                title: s['title'] as String,
-                description: s['description'] as String,
+                order: (s['order'] as num?)?.toInt() ?? 0,
+                title: s['title'] as String? ?? '',
+                description: s['description'] as String? ?? '',
                 durationMinutes: (s['durationMinutes'] as num? ?? 5).toInt(),
               ))
           .toList(),

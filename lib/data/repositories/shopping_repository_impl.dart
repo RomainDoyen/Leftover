@@ -9,7 +9,16 @@ class ShoppingRepositoryImpl implements ShoppingRepository {
 
   ShoppingRepositoryImpl(this._db, this._auth);
 
-  String get _uid => _auth.currentUser?.uid ?? 'anonymous';
+  String get _uid {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) {
+      throw StateError(
+        'ShoppingRepository requires an authenticated user. '
+        'Call Firebase Auth sign-in before accessing the shopping list.',
+      );
+    }
+    return uid;
+  }
 
   CollectionReference<Map<String, dynamic>> get _col => _db
       .collection('users')
@@ -44,12 +53,15 @@ class ShoppingRepositoryImpl implements ShoppingRepository {
 
   @override
   Future<void> clearChecked() async {
+    const chunkSize = 500;
     final checked = await _col.where('checked', isEqualTo: true).get();
-    final batch = _db.batch();
-    for (final doc in checked.docs) {
-      batch.delete(doc.reference);
+    for (var i = 0; i < checked.docs.length; i += chunkSize) {
+      final batch = _db.batch();
+      for (final doc in checked.docs.skip(i).take(chunkSize)) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
     }
-    await batch.commit();
   }
 
   ShoppingItem _fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {

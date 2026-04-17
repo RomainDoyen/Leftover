@@ -11,6 +11,7 @@ class MockRecipeRepository implements RecipeRepository {
     Recipe(
       id: 'quiche-lorraine',
       name: 'Quiche Lorraine',
+      imageUrl: 'https://placehold.co/400x300/FF784E/FFFFFF?text=Quiche+Lorraine',
       cookTimeMinutes: 45,
       servingsMin: 2,
       servingsMax: 4,
