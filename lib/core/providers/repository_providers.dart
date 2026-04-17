@@ -5,14 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/firebase_recipe_source.dart';
 import '../../data/repositories/mock_recipe_repository.dart';
 import '../../data/repositories/recipe_repository_impl.dart';
+import '../../data/repositories/mock_shopping_repository.dart';
 import '../../data/repositories/shopping_repository_impl.dart';
 import '../../domain/repositories/recipe_repository.dart';
 import '../../domain/repositories/shopping_repository.dart';
 import '../../domain/use_cases/add_to_shopping_list_use_case.dart';
 import '../../domain/use_cases/match_recipes_use_case.dart';
 
-/// Set to true to use real Firebase data. Set to false for mock data (no Firebase needed).
-const _useFirebase = false;
+/// Set USE_FIREBASE=true via --dart-define to use real Firebase.
+/// Example: flutter run --dart-define=USE_FIREBASE=true
+const _useFirebase = bool.fromEnvironment('USE_FIREBASE');
 
 final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
   if (_useFirebase) {
@@ -24,10 +26,13 @@ final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
 });
 
 final shoppingRepositoryProvider = Provider<ShoppingRepository>((ref) {
-  return ShoppingRepositoryImpl(
-    FirebaseFirestore.instance,
-    FirebaseAuth.instance,
-  );
+  if (_useFirebase) {
+    return ShoppingRepositoryImpl(
+      FirebaseFirestore.instance,
+      FirebaseAuth.instance,
+    );
+  }
+  return MockShoppingRepository();
 });
 
 final matchRecipesUseCaseProvider = Provider<MatchRecipesUseCase>((ref) {

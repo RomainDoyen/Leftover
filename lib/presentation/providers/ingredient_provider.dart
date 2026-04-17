@@ -12,7 +12,8 @@ class IngredientNotifier extends Notifier<List<String>> {
   }
 
   void remove(String ingredient) {
-    state = state.where((i) => i != ingredient).toList();
+    final trimmed = ingredient.trim().toLowerCase();
+    state = state.where((i) => i != trimmed).toList();
   }
 
   void clear() => state = [];
