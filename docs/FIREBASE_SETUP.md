@@ -20,8 +20,9 @@ Follow these steps to connect Leftover Roulette to Firebase.
 ### Authentication
 1. In Firebase Console → Build → Authentication
 2. Click "Get started"
-3. Enable **Email/Password** provider
-4. Enable **Google** provider (requires SHA-1 for Android)
+3. Enable **Anonymous** provider ← required for shopping list without login
+4. Enable **Email/Password** provider
+5. Enable **Google** provider (requires SHA-1 for Android)
 
 ## 3. Run FlutterFire CLI
 
