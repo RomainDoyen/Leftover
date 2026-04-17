@@ -7,5 +7,6 @@ void main() {
   testWidgets('App renders without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(const ProviderScope(child: LeftoverRouletteApp()));
     expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.text('Ready to cook!'), findsOneWidget);
   });
 }

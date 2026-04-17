@@ -20,4 +20,10 @@ abstract class AppColors {
   static const onPrimary          = Color(0xFFFFEFEB);
   static const onSecondary        = Color(0xFFD0FFCB);
   static const onSecondaryContainer = Color(0xFF005F1D);
+  static const onPrimaryContainer   = Color(0xFF470E00);
+  static const onTertiary           = Color(0xFFFFEDFD);
+  static const tertiaryContainer    = Color(0xFF9F45B5);
+  static const onTertiaryContainer  = Color(0xFFFFEDFD);
+  static const onError              = Color(0xFFFFEFEE);
+  static const navigationIndicator  = Color(0xFFFFE8DF);
 }

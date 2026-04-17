@@ -8,11 +8,11 @@ void main() async {
   runApp(const ProviderScope(child: LeftoverRouletteApp()));
 }
 
-class LeftoverRouletteApp extends ConsumerWidget {
+class LeftoverRouletteApp extends StatelessWidget {
   const LeftoverRouletteApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Leftover Roulette',
       theme: AppTheme.light,
