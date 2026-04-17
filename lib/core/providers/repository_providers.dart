@@ -14,12 +14,10 @@ import '../../domain/use_cases/add_to_shopping_list_use_case.dart';
 import '../../domain/use_cases/generate_recipe_use_case.dart';
 import '../../domain/use_cases/match_recipes_use_case.dart';
 
-/// Set USE_FIREBASE=true via --dart-define to use real Firebase.
-/// Example: flutter run --dart-define=USE_FIREBASE=true
-const _useFirebase = bool.fromEnvironment('USE_FIREBASE');
+import '../../env.dart';
 
 final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
-  if (_useFirebase) {
+  if (Env.useFirebase) {
     return RecipeRepositoryImpl(
       FirebaseRecipeSource(FirebaseFirestore.instance),
     );
@@ -28,7 +26,7 @@ final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
 });
 
 final shoppingRepositoryProvider = Provider<ShoppingRepository>((ref) {
-  if (_useFirebase) {
+  if (Env.useFirebase) {
     return ShoppingRepositoryImpl(
       FirebaseFirestore.instance,
       FirebaseAuth.instance,

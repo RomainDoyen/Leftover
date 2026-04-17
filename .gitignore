@@ -46,6 +46,7 @@ app.*.map.json
 
 # Local env / credentials — NEVER commit these
 dart_defines.json
+lib/env.dart
 
 # Firebase / credentials — NEVER commit these
 serviceAccountKey.json

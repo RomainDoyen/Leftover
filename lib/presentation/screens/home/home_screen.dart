@@ -11,7 +11,7 @@ import '../../../presentation/theme/app_colors.dart';
 import 'widgets/ingredient_chip.dart';
 import 'widgets/trending_card.dart';
 
-const _useFirebase = bool.fromEnvironment('USE_FIREBASE');
+import '../../../env.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -127,7 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
             actions: [
-              if (_useFirebase)
+              if (Env.useFirebase)
                 IconButton(
                   icon: const Icon(Icons.logout),
                   color: AppColors.primary,

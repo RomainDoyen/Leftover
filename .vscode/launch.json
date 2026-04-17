@@ -2,13 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "🔥 Firebase + Mistral",
-      "request": "launch",
-      "type": "dart",
-      "args": ["--dart-define-from-file=dart_defines.json"]
-    },
-    {
-      "name": "🧪 Mock (sans Firebase)",
+      "name": "Leftover Roulette",
       "request": "launch",
       "type": "dart"
     }
