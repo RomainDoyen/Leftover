@@ -8,6 +8,20 @@ import 'widgets/shopping_item_tile.dart';
 class ShoppingScreen extends ConsumerWidget {
   const ShoppingScreen({super.key});
 
+  Future<void> _toggle(
+      BuildContext context, WidgetRef ref, String itemId, bool checked) async {
+    try {
+      await ref.read(shoppingRepositoryProvider).toggleItem(itemId, checked);
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("Impossible de mettre à jour l'article")),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final itemsAsync = ref.watch(shoppingListProvider);
@@ -83,9 +97,7 @@ class ShoppingScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 ...unchecked.map((item) => ShoppingItemTile(
                       item: item,
-                      onToggle: (v) => ref
-                          .read(shoppingRepositoryProvider)
-                          .toggleItem(item.id, v),
+                      onToggle: (v) => _toggle(context, ref, item.id, v),
                     )),
               ],
               if (checked.isNotEmpty) ...[
@@ -100,9 +112,7 @@ class ShoppingScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 ...checked.map((item) => ShoppingItemTile(
                       item: item,
-                      onToggle: (v) => ref
-                          .read(shoppingRepositoryProvider)
-                          .toggleItem(item.id, v),
+                      onToggle: (v) => _toggle(context, ref, item.id, v),
                     )),
               ],
             ],
