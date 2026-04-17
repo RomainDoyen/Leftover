@@ -206,6 +206,16 @@ async function seed() {
 }
 
 seed().catch((err) => {
-  console.error('❌ Seeding failed:', err.message);
+  if (err.code === 5 || (err.message && err.message.includes('NOT_FOUND'))) {
+    console.error(
+      '❌  Seeding failed: Firestore database not found.\n\n' +
+      '    → Go to https://console.firebase.google.com\n' +
+      '    → Build > Firestore Database > Create database\n' +
+      '    → Choose "Start in test mode", region europe-west1\n' +
+      '    → Then re-run this script.\n'
+    );
+  } else {
+    console.error('❌  Seeding failed:', err.message);
+  }
   process.exit(1);
 });
