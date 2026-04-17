@@ -43,9 +43,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
     setState(() => _spinning = true);
     await ref.read(recipeMatchProvider.notifier).spin();
-    setState(() => _spinning = false);
 
     if (!mounted) return;
+    setState(() => _spinning = false);
     final match = ref.read(bestMatchProvider);
     if (match != null) {
       context.push(Routes.result, extra: match);
@@ -89,7 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: const EdgeInsets.all(24),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _HeroCard(),
+                const _HeroCard(),
                 const SizedBox(height: 32),
                 _IngredientInput(
                   controller: _controller,
@@ -153,9 +153,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 // ─── Private sub-widgets ────────────────────────────────────────────────────
 
 class _HeroCard extends StatelessWidget {
+  const _HeroCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLow,
@@ -270,7 +273,7 @@ class _BentoStats extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${ingredientCount * 25}%',
+                    '${(ingredientCount * 25).clamp(0, 100)}%',
                     style: const TextStyle(
                       color: AppColors.secondary,
                       fontWeight: FontWeight.w800,
