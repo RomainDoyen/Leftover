@@ -33,6 +33,7 @@ class _CookingTimerState extends State<CookingTimer> {
       _timer?.cancel();
       setState(() => _running = false);
     } else {
+      _timer?.cancel();
       setState(() => _running = true);
       _timer = Timer.periodic(const Duration(seconds: 1), (_) {
         if (_remaining > 0) {

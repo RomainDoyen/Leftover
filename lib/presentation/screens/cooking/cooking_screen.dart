@@ -46,10 +46,10 @@ class _CookingScreenState extends State<CookingScreen> {
                     fontWeight: FontWeight.w800,
                   ),
             ),
-            actions: [
+            actions: const [
               IconButton(
-                icon: const Icon(Icons.favorite_border, color: AppColors.primary),
-                onPressed: () {},
+                icon: Icon(Icons.favorite_border, color: AppColors.primary),
+                onPressed: null,
               ),
             ],
           ),
