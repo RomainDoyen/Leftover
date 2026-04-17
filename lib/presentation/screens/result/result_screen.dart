@@ -59,7 +59,7 @@ class ResultScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: const Text(
-                        'MATCH FOUND',
+                        'MATCH TROUVÉ',
                         style: TextStyle(
                           color: AppColors.onSecondaryContainer,
                           fontWeight: FontWeight.w800,
@@ -114,7 +114,7 @@ class ResultScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'STOCK STATUS',
+                                  'MES STOCKS',
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
@@ -176,7 +176,7 @@ class ResultScreen extends ConsumerWidget {
                               ),
                             ),
                             const Text(
-                              'Cook Time',
+                              'Durée',
                               style: TextStyle(
                                   color: Colors.white70, fontSize: 12),
                             ),
@@ -209,7 +209,7 @@ class ResultScreen extends ConsumerWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Text(
-                      'IN YOUR PANTRY',
+                      'DÉJÀ DANS TON FRIGO',
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -228,7 +228,7 @@ class ResultScreen extends ConsumerWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
                     child: Text(
-                      'MISSING ITEMS',
+                      'MANQUANTS',
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -241,9 +241,29 @@ class ResultScreen extends ConsumerWidget {
                     (ing) => IngredientListItem(
                       ingredient: ing,
                       owned: false,
-                      onAddToList: () => ref
-                          .read(addToShoppingListUseCaseProvider)
-                          .execute(ing, match!),
+                      onAddToList: () async {
+                      try {
+                        await ref
+                            .read(addToShoppingListUseCaseProvider)
+                            .execute(ing, match!);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${ing.name} ajouté à la liste'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      } catch (_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Impossible d'ajouter l'ingrédient"),
+                            ),
+                          );
+                        }
+                      }
+                    },
                     ),
                   ),
                 ],
@@ -258,7 +278,7 @@ class ResultScreen extends ConsumerWidget {
                         context.push(Routes.cooking, extra: match),
                     icon: const Icon(Icons.restaurant, color: Colors.white),
                     label: const Text(
-                      'Start Cooking Now',
+                      'Commencer la recette',
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
@@ -277,7 +297,7 @@ class ResultScreen extends ConsumerWidget {
                   child: TextButton.icon(
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Spin Again'),
+                    label: const Text('Relancer'),
                     style: TextButton.styleFrom(
                         foregroundColor: AppColors.onSurfaceVariant),
                   ),

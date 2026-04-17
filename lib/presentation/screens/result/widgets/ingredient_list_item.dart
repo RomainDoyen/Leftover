@@ -83,7 +83,7 @@ class IngredientListItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: const Text(
-                  'Add to List',
+                  'Ajouter',
                   style: TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w700),
                 ),

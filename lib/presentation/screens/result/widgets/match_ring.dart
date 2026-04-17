@@ -38,19 +38,19 @@ class _RingPainter extends CustomPainter {
     final radius = (size.width - strokeWidth) / 2;
     final rect = Rect.fromCircle(center: center, radius: radius);
 
+    // Track (full circle, no StrokeCap artifact)
     final trackPaint = Paint()
       ..color = AppColors.surfaceContainerHighest
       ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawCircle(center, radius, trackPaint);
 
     final progressPaint = Paint()
       ..color = AppColors.secondary
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-
-    canvas.drawArc(rect, 0, 2 * pi, false, trackPaint);
     if (score > 0) {
       canvas.drawArc(rect, -pi / 2, 2 * pi * score, false, progressPaint);
     }
