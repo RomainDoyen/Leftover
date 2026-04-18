@@ -1,6 +1,6 @@
 # Firebase Setup Instructions
 
-Follow these steps to connect Leftover Roulette to Firebase.
+Follow these steps to connect Leftover to Firebase.
 
 ## 1. Create Firebase Project
 
@@ -20,9 +20,8 @@ Follow these steps to connect Leftover Roulette to Firebase.
 ### Authentication
 1. In Firebase Console → Build → Authentication
 2. Click "Get started"
-3. Enable **Anonymous** provider ← required for shopping list without login
-4. Enable **Email/Password** provider
-5. Enable **Google** provider (requires SHA-1 for Android)
+3. Enable **Email/Password** provider
+4. Enable **Google** provider (requires SHA-1 for Android)
 
 ## 3. Run FlutterFire CLI
 
@@ -57,7 +56,41 @@ In `lib/core/providers/repository_providers.dart` (created in Task 7), change:
 const _useFirebase = false; // → change to true
 ```
 
-## 6. Seed Firestore
+## 6. Firestore Security Rules
+
+In Firebase Console → Firestore → Rules, use:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /recipes/{recipeId} {
+      // Any signed-in user can read or create recipes (AI-generated ones are saved here).
+      allow read:   if request.auth != null;
+      allow create: if request.auth != null;
+      // Only service accounts (backend/seed scripts) can update or delete.
+      allow update, delete: if false;
+    }
+
+    match /users/{userId}/shoppingLists/{document=**} {
+      // Users can only access their own shopping list.
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId}/history/{document=**} {
+      // Users can only access their own recipe history.
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+## 7. Seed Firestore
 
 ```bash
 cd scripts

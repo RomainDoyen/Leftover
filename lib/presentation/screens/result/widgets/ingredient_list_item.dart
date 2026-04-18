@@ -5,12 +5,14 @@ import '../../../theme/app_colors.dart';
 class IngredientListItem extends StatelessWidget {
   final Ingredient ingredient;
   final bool owned;
+  final bool addedToList;
   final VoidCallback? onAddToList;
 
   const IngredientListItem({
     super.key,
     required this.ingredient,
     required this.owned,
+    this.addedToList = false,
     this.onAddToList,
   });
 
@@ -85,26 +87,52 @@ class IngredientListItem extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (!owned && onAddToList != null)
-                        GestureDetector(
-                          onTap: onAddToList,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: AppColors.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: const Text(
-                              'Ajouter',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.onSurface,
+                      if (!owned)
+                        addedToList
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondaryContainer,
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.check,
+                                        size: 13,
+                                        color: AppColors.onSecondaryContainer),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      'Ajouté',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.onSecondaryContainer,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: onAddToList,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceContainerHigh,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: const Text(
+                                    'Ajouter',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.onSurface,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                     ],
                   ),
                 ),

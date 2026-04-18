@@ -1,5 +1,5 @@
 /* ============================================================
-   Leftover Roulette — Documentation JS
+   Leftover — Documentation JS
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -59,15 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ============================================================
      SCREEN TABS
      ============================================================ */
+  window.screenPreviewUrl = (name) => {
+    try {
+      return new URL('screens/' + name + '.html', window.location.href).href;
+    } catch (e) {
+      return 'screens/' + name + '.html';
+    }
+  };
+
   window.switchScreen = (screen, btn) => {
-    // Swap iframe source
     const iframe = document.getElementById('screen-iframe');
     if (iframe) {
-      // Fade out → swap → fade in
       iframe.style.opacity = '0';
       iframe.style.transition = 'opacity 0.2s ease';
       setTimeout(() => {
-        iframe.src = `screens/${screen}.html`;
+        iframe.src = window.screenPreviewUrl(screen);
         iframe.style.opacity = '1';
       }, 200);
     }

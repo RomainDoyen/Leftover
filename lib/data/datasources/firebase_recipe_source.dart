@@ -12,6 +12,34 @@ class FirebaseRecipeSource {
     return snapshot.docs.map(_fromDoc).toList();
   }
 
+  Future<void> save(Recipe recipe) async {
+    await _db.collection('recipes').doc(recipe.id).set({
+      'name':            recipe.name,
+      'imageUrl':        recipe.imageUrl,
+      'cookTimeMinutes': recipe.cookTimeMinutes,
+      'servings': {
+        'min': recipe.servingsMin,
+        'max': recipe.servingsMax,
+      },
+      'difficulty': recipe.difficulty,
+      'tags':       recipe.tags,
+      'source':     'ai',
+      'ingredients': recipe.ingredients.map((i) => {
+        'name':     i.name,
+        'amount':   i.amount,
+        'category': i.category,
+        'aliases':  i.aliases,
+      }).toList(),
+      'steps': recipe.steps.map((s) => {
+        'order':           s.order,
+        'title':           s.title,
+        'description':     s.description,
+        'durationMinutes': s.durationMinutes,
+      }).toList(),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
   Recipe _fromDoc(QueryDocumentSnapshot<Object?> doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Recipe(

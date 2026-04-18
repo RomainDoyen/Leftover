@@ -9,4 +9,7 @@ class RecipeRepositoryImpl implements RecipeRepository {
 
   @override
   Future<List<Recipe>> getAll() => _source.getAll();
+
+  @override
+  Future<void> save(Recipe recipe) => _source.save(recipe);
 }

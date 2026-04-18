@@ -1,7 +1,7 @@
 {
   "name": "leftover-roulette-scripts",
   "version": "1.0.0",
-  "description": "Firestore seeder for Leftover Roulette",
+  "description": "Firestore seeder for Leftover",
   "scripts": {
     "seed": "node seed_firestore.js"
   },

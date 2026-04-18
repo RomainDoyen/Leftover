@@ -7,6 +7,11 @@ class MockRecipeRepository implements RecipeRepository {
   @override
   Future<List<Recipe>> getAll() async => _recipes;
 
+  @override
+  Future<void> save(Recipe recipe) async {
+    // No-op in mock mode — AI recipes are not persisted locally.
+  }
+
   static const _recipes = [
     Recipe(
       id: 'quiche-lorraine',

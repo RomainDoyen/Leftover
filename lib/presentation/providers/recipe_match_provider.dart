@@ -1,10 +1,14 @@
 // lib/presentation/providers/recipe_match_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../../domain/entities/history_entry.dart';
 import '../../domain/entities/recipe_match.dart';
 import '../../core/providers/repository_providers.dart';
 import 'ingredient_provider.dart';
 
 class RecipeMatchNotifier extends AsyncNotifier<List<RecipeMatch>> {
+  static const _uuid = Uuid();
+
   @override
   Future<List<RecipeMatch>> build() async => [];
 
@@ -16,6 +20,7 @@ class RecipeMatchNotifier extends AsyncNotifier<List<RecipeMatch>> {
     state = await AsyncValue.guard(
       () => ref.read(matchRecipesUseCaseProvider).execute(ingredients),
     );
+    await _saveTopMatchToHistory(ingredients, source: 'match');
   }
 
   /// Call Mistral AI to generate a recipe when no database match was found.
@@ -33,7 +38,28 @@ class RecipeMatchNotifier extends AsyncNotifier<List<RecipeMatch>> {
       return [match];
     });
 
+    await _saveTopMatchToHistory(ingredients, source: 'ai');
     return state.valueOrNull?.isNotEmpty ?? false;
+  }
+
+  Future<void> _saveTopMatchToHistory(
+    List<String> ingredients, {
+    required String source,
+  }) async {
+    final top = state.valueOrNull?.firstOrNull;
+    if (top == null) return;
+    try {
+      final entry = HistoryEntry(
+        id:              _uuid.v4(),
+        match:           top,
+        userIngredients: List.unmodifiable(ingredients),
+        source:          source,
+        createdAt:       DateTime.now(),
+      );
+      await ref.read(historyRepositoryProvider).saveEntry(entry);
+    } catch (_) {
+      // History save failure must not block the user experience.
+    }
   }
 }
 

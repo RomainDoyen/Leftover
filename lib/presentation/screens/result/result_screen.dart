@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/entities/recipe_match.dart';
+import '../../../presentation/providers/shopping_list_provider.dart';
 import '../../../presentation/theme/app_colors.dart';
 import 'widgets/ingredient_list_item.dart';
 import 'widgets/match_ring.dart';
@@ -23,6 +24,8 @@ class ResultScreen extends ConsumerWidget {
     }
 
     final recipe = match!.recipe;
+    final shoppingItems = ref.watch(shoppingListProvider).valueOrNull ?? [];
+    final addedNames = shoppingItems.map((i) => i.name.toLowerCase()).toSet();
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -124,12 +127,17 @@ class ResultScreen extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(
-                                    '${match!.matchPercent}%',
-                                    style: const TextStyle(
-                                      color: AppColors.secondary,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 44,
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '${match!.matchPercent}%',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        color: AppColors.secondary,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 44,
+                                      ),
                                     ),
                                   ),
                                   const Text(
@@ -243,6 +251,7 @@ class ResultScreen extends ConsumerWidget {
                     (ing) => IngredientListItem(
                       ingredient: ing,
                       owned: false,
+                      addedToList: addedNames.contains(ing.name.toLowerCase()),
                       onAddToList: () async {
                       try {
                         await ref
@@ -256,11 +265,11 @@ class ResultScreen extends ConsumerWidget {
                             ),
                           );
                         }
-                      } catch (_) {
+                      } catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Impossible d'ajouter l'ingrédient"),
+                            SnackBar(
+                              content: Text("Impossible d'ajouter : $e"),
                             ),
                           );
                         }

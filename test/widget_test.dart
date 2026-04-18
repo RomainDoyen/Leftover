@@ -15,6 +15,6 @@ void main() {
       ),
     );
     expect(find.byType(MaterialApp), findsOneWidget);
-    expect(find.text('Leftover Roulette'), findsOneWidget);
+    expect(find.text('Leftover'), findsOneWidget);
   });
 }

@@ -4,10 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/firebase_recipe_source.dart';
 import '../../data/datasources/mistral_recipe_source.dart';
+import '../../data/repositories/history_repository_impl.dart';
+import '../../data/repositories/mock_history_repository.dart';
 import '../../data/repositories/mock_recipe_repository.dart';
 import '../../data/repositories/recipe_repository_impl.dart';
 import '../../data/repositories/mock_shopping_repository.dart';
 import '../../data/repositories/shopping_repository_impl.dart';
+import '../../domain/repositories/history_repository.dart';
 import '../../domain/repositories/recipe_repository.dart';
 import '../../domain/repositories/shopping_repository.dart';
 import '../../domain/use_cases/add_to_shopping_list_use_case.dart';
@@ -48,5 +51,18 @@ final mistralRecipeSourceProvider = Provider<MistralRecipeSource>((ref) {
 });
 
 final generateRecipeUseCaseProvider = Provider<GenerateRecipeUseCase>((ref) {
-  return GenerateRecipeUseCase(ref.watch(mistralRecipeSourceProvider));
+  return GenerateRecipeUseCase(
+    ref.watch(mistralRecipeSourceProvider),
+    ref.watch(recipeRepositoryProvider),
+  );
+});
+
+final historyRepositoryProvider = Provider<HistoryRepository>((ref) {
+  if (Env.useFirebase) {
+    return HistoryRepositoryImpl(
+      FirebaseFirestore.instance,
+      FirebaseAuth.instance,
+    );
+  }
+  return MockHistoryRepository();
 });

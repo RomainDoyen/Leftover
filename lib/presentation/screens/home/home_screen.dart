@@ -4,14 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/providers/repository_providers.dart';
 import '../../../core/router/app_router.dart';
-import '../../../presentation/providers/auth_provider.dart';
+import '../../../domain/entities/recipe_match.dart';
 import '../../../presentation/providers/ingredient_provider.dart';
 import '../../../presentation/providers/recipe_match_provider.dart';
+import '../../../presentation/providers/trending_provider.dart';
 import '../../../presentation/theme/app_colors.dart';
 import 'widgets/ingredient_chip.dart';
 import 'widgets/trending_card.dart';
-
-import '../../../env.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -22,7 +21,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _controller = TextEditingController();
-  bool _spinning   = false;
+  bool _spinning = false;
   bool _generating = false; // true while calling Mistral AI
 
   @override
@@ -60,21 +59,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
 
     // ── 2. Aucune recette trouvée → génération IA ─────────────────────────
-    final canGenerate =
-        ref.read(generateRecipeUseCaseProvider).isAvailable;
+    final canGenerate = ref.read(generateRecipeUseCaseProvider).isAvailable;
     if (!canGenerate) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Aucune recette trouvée. Essaie d\'autres ingrédients !'),
+          content:
+              Text('Aucune recette trouvée. Essaie d\'autres ingrédients !'),
         ),
       );
       return;
     }
 
     setState(() => _generating = true);
-    final generated =
-        await ref.read(recipeMatchProvider.notifier).generate();
+    final generated = await ref.read(recipeMatchProvider.notifier).generate();
     if (!mounted) return;
     setState(() => _generating = false);
 
@@ -118,7 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  'Leftover Roulette',
+                  'Leftover',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w800,
@@ -126,25 +124,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ],
             ),
-            actions: [
-              if (Env.useFirebase)
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  color: AppColors.primary,
-                  tooltip: 'Se déconnecter',
-                  onPressed: () async {
-                    await ref
-                        .read(authNotifierProvider.notifier)
-                        .signOut();
-                  },
-                )
-              else
-                IconButton(
-                  icon: const Icon(Icons.account_circle_outlined),
-                  color: AppColors.primary,
-                  onPressed: () {},
-                ),
-            ],
+            actions: const [],
           ),
           SliverPadding(
             padding: const EdgeInsets.all(24),
@@ -189,28 +169,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 140,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: const [
-                  TrendingCard(
-                    title: 'Poêlée Frigo Express',
-                    subtitle: 'Rapide · 20 min · Facile',
-                  ),
-                  SizedBox(width: 16),
-                  TrendingCard(
-                    title: 'Toast Umami Fondu',
-                    subtitle: 'Réconfort · 15 min · Facile',
-                  ),
-                ],
-              ),
-            ),
+            child: _TrendingList(),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
         ],
       ),
+    );
+  }
+}
+
+// ─── Trending list ────────────────────────────────────────────────────────────
+
+class _TrendingList extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(trendingRecipesProvider);
+
+    return async.when(
+      loading: () => const SizedBox(
+        height: 140,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (recipes) {
+        if (recipes.isEmpty) return const SizedBox.shrink();
+        return SizedBox(
+          height: 140,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: recipes.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            itemBuilder: (_, i) {
+              final recipe = recipes[i];
+              return TrendingCard(
+                recipe: recipe,
+                onTap: () {
+                  // Build a RecipeMatch with no matched ingredients (browse mode).
+                  final match = RecipeMatch(
+                    recipe:             recipe,
+                    matchScore:         0,
+                    matchedIngredients: const [],
+                    missingIngredients: recipe.ingredients,
+                  );
+                  context.push(Routes.result, extra: match);
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -235,10 +243,14 @@ class _HeroCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Qu'est-ce qu'il y a\ndans ton frigo ?",
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                "Qu'est-ce qu'il y a dans ton frigo ?",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       color: AppColors.onSurface,
-                      height: 1.1,
+                      fontSize: 28,
+                      height: 1.2,
+                      fontWeight: FontWeight.w800,
                     ),
               ),
               const SizedBox(height: 12),
@@ -420,15 +432,15 @@ class _SpinButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final busy  = spinning || generating;
+    final busy = spinning || generating;
     final label = generating
         ? 'L\'IA cuisine…'
         : spinning
             ? 'En cours...'
-            : 'Lancer la roulette';
+            : 'Trouver une recette';
     final icon = generating
         ? const Icon(Icons.auto_awesome, color: Colors.white)
-        : const Icon(Icons.casino, color: Colors.white);
+        : const Icon(Icons.restaurant_menu, color: Colors.white);
 
     return SizedBox(
       width: double.infinity,

@@ -40,7 +40,7 @@ class _CookingScreenState extends State<CookingScreen> {
               onPressed: () => context.pop(),
             ),
             title: Text(
-              'Leftover Roulette',
+              'Leftover',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w800,

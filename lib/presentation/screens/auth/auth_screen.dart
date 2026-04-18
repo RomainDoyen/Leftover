@@ -80,7 +80,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     final authState = ref.watch(authNotifierProvider);
     final isLoading = authState is AsyncLoading;
 
-    return Scaffold(
+    // Prevent the Android back button from bypassing authentication.
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       backgroundColor: AppColors.surface,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -104,7 +107,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  'Leftover Roulette',
+                  'Leftover',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w800,
@@ -259,7 +262,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           ),
         ),
       ),
-    );
+    ), // Scaffold
+    ); // PopScope
   }
 }
 

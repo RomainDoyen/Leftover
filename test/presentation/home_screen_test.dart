@@ -14,19 +14,19 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pump();
 
-      expect(find.text('Leftover Roulette'), findsWidgets);
+      expect(find.text('Leftover'), findsWidgets);
       expect(find.byType(TextField), findsOneWidget);
 
       // Scroll until the spin button is built and visible
       await tester.scrollUntilVisible(
-        find.text('Lancer la roulette'),
+        find.text('Trouver une recette'),
         100,
         scrollable: find.byType(Scrollable).first,
       );
       // Scroll a bit more so the button centre is fully inside the viewport
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -80));
       await tester.pump();
-      expect(find.text('Lancer la roulette'), findsOneWidget);
+      expect(find.text('Trouver une recette'), findsOneWidget);
     });
 
     testWidgets('adding ingredient creates a chip', (tester) async {
@@ -63,14 +63,14 @@ void main() {
       // Scroll until button is built, then scroll extra so its centre is
       // fully inside the 800×600 test viewport before tapping.
       await tester.scrollUntilVisible(
-        find.text('Lancer la roulette'),
+        find.text('Trouver une recette'),
         100,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -80));
       await tester.pump();
 
-      await tester.tap(find.text('Lancer la roulette'));
+      await tester.tap(find.text('Trouver une recette'));
       await tester.pump();
 
       expect(
