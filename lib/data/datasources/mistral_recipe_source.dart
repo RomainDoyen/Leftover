@@ -2,18 +2,19 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../domain/entities/ingredient.dart';
 import '../../domain/entities/recipe.dart';
-import '../../env.dart';
 
 /// Calls the Mistral API to generate a recipe from a list of ingredients.
-/// API key is read from lib/env.dart (gitignored).
-/// Get a free key at https://console.mistral.ai
+/// API key is supplied by the user (Profil) or read from lib/env.dart (dev).
 class MistralRecipeSource {
+  final String apiKey;
+
+  const MistralRecipeSource({required this.apiKey});
+
   static const _endpoint = 'https://api.mistral.ai/v1/chat/completions';
   static const _model    = 'mistral-small-latest';
 
-  /// Returns false when no API key is configured in env.dart.
-  bool get isAvailable => Env.mistralApiKey.isNotEmpty &&
-      Env.mistralApiKey != 'REMPLACE_PAR_TA_CLE_MISTRAL';
+  bool get isAvailable =>
+      apiKey.isNotEmpty && apiKey != 'REMPLACE_PAR_TA_CLE_MISTRAL';
 
   Future<Recipe> generateFromIngredients(List<String> ingredients) async {
     assert(isAvailable, 'MISTRAL_API_KEY is not set.');
@@ -48,7 +49,7 @@ Règles :
     final response = await http.post(
       Uri.parse(_endpoint),
       headers: {
-        'Authorization': 'Bearer ${Env.mistralApiKey}',
+        'Authorization': 'Bearer $apiKey',
         'Content-Type': 'application/json',
       },
       body: jsonEncode({

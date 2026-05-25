@@ -75,6 +75,26 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         .showSnackBar(SnackBar(content: Text(msg)));
   }
 
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  Future<void> _showForgotPasswordDialog() async {
+    final sentEmail = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => _ForgotPasswordDialog(
+        initialEmail: _emailCtrl.text.trim(),
+        onError: _showError,
+      ),
+    );
+    if (sentEmail != null && mounted) {
+      _showMessage(
+        'Un e-mail de réinitialisation a été envoyé à $sentEmail.',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
@@ -171,6 +191,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),
               ),
+              if (!_isRegister) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: isLoading ? null : _showForgotPasswordDialog,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
+                    child: const Text('Mot de passe oublié ?'),
+                  ),
+                ),
+              ],
               if (_isRegister) ...[
                 const SizedBox(height: 14),
                 _Field(
@@ -268,6 +302,98 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 }
 
 // ─── Private widgets ─────────────────────────────────────────────────────────
+
+class _ForgotPasswordDialog extends ConsumerStatefulWidget {
+  final String initialEmail;
+  final void Function(String message) onError;
+
+  const _ForgotPasswordDialog({
+    required this.initialEmail,
+    required this.onError,
+  });
+
+  @override
+  ConsumerState<_ForgotPasswordDialog> createState() =>
+      _ForgotPasswordDialogState();
+}
+
+class _ForgotPasswordDialogState extends ConsumerState<_ForgotPasswordDialog> {
+  late final TextEditingController _emailCtrl;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailCtrl = TextEditingController(text: widget.initialEmail);
+  }
+
+  @override
+  void dispose() {
+    _emailCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final email = _emailCtrl.text.trim();
+    if (email.isEmpty) {
+      widget.onError('Indique ton adresse e-mail.');
+      return;
+    }
+    setState(() => _isLoading = true);
+    final error = await ref
+        .read(authNotifierProvider.notifier)
+        .sendPasswordResetEmail(email);
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+    if (error != null) {
+      widget.onError(error);
+      return;
+    }
+    Navigator.of(context).pop(email);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Mot de passe oublié'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Saisis ton adresse e-mail pour recevoir un lien de réinitialisation.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: 16),
+          _Field(
+            controller: _emailCtrl,
+            label: 'Adresse e-mail',
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+          child: const Text('Annuler'),
+        ),
+        FilledButton(
+          onPressed: _isLoading ? null : _submit,
+          child: _isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Envoyer'),
+        ),
+      ],
+    );
+  }
+}
 
 class _Field extends StatelessWidget {
   final TextEditingController controller;

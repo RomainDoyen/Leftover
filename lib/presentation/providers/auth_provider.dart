@@ -63,6 +63,16 @@ class AuthNotifier extends Notifier<AsyncValue<void>> {
     state = const AsyncData(null);
   }
 
+  /// Sends a password-reset e-mail. Returns an error message, or null on success.
+  Future<String?> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim());
+      return null;
+    } catch (e) {
+      return friendlyError(e);
+    }
+  }
+
   /// Human-readable French message from a FirebaseAuthException code.
   static String friendlyError(Object error) {
     if (error is FirebaseAuthException) {

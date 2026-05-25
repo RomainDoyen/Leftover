@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/app_router.dart';
 import '../../../env.dart';
 import '../../../presentation/providers/auth_provider.dart';
+import '../../../presentation/providers/user_settings_provider.dart';
 import '../../../presentation/theme/app_colors.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -12,7 +13,11 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = Env.useFirebase ? FirebaseAuth.instance.currentUser : null;
+    final user = Env.useFirebase
+        ? ref.watch(authStateProvider).valueOrNull
+        : null;
+    final settings = ref.watch(userSettingsProvider).valueOrNull;
+    final hasMistralKey = settings?.hasMistralKey ?? false;
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -39,6 +44,13 @@ class ProfileScreen extends ConsumerWidget {
                   _UserCard(user: user),
                   const SizedBox(height: 24),
 
+                  _ActionTile(
+                    icon: Icons.edit_outlined,
+                    label: 'Modifier mes informations',
+                    onTap: () => context.push(Routes.editProfile),
+                  ),
+                  const SizedBox(height: 24),
+
                   // ── Section infos ───────────────────────────────────────
                   if (user != null) ...[
                     _SectionTitle(label: 'Mon compte'),
@@ -60,6 +72,18 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                   ],
+
+                  _SectionTitle(label: 'Intelligence artificielle'),
+                  const SizedBox(height: 8),
+                  _InfoTile(
+                    icon: Icons.auto_awesome_outlined,
+                    label: 'Clé API Mistral',
+                    value: hasMistralKey ? 'Configurée' : 'Non configurée',
+                    valueColor: hasMistralKey
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: 24),
 
                   // ── Section app ─────────────────────────────────────────
                   _SectionTitle(label: "L'application"),
@@ -218,7 +242,13 @@ class _InfoTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _InfoTile({required this.icon, required this.label, required this.value});
+  final Color? valueColor;
+  const _InfoTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -249,10 +279,10 @@ class _InfoTile extends StatelessWidget {
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.onSurface,
+                    color: valueColor ?? AppColors.onSurface,
                   ),
                 ),
               ],

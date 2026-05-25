@@ -13,6 +13,7 @@ import '../../presentation/screens/result/result_screen.dart';
 import '../../presentation/screens/history/history_screen.dart';
 import '../../presentation/screens/how_it_works/how_it_works_screen.dart';
 import '../../presentation/screens/profile/profile_screen.dart';
+import '../../presentation/screens/profile/edit_profile_screen.dart';
 import '../../presentation/screens/shopping/shopping_screen.dart';
 import '../../presentation/screens/cooking/cooking_screen.dart';
 
@@ -24,6 +25,7 @@ abstract class Routes {
   static const shopping   = '/shopping';
   static const history    = '/history';
   static const profile    = '/profile';
+  static const editProfile = '/profile/edit';
   static const howItWorks = '/how-it-works';
   static const cooking    = '/cooking';
 }
@@ -106,6 +108,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.editProfile,
+        builder: (context, state) => const EditProfileScreen(),
       ),
       GoRoute(
         path: Routes.howItWorks,

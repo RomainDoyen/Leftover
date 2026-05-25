@@ -8,6 +8,7 @@ import '../../../domain/entities/recipe_match.dart';
 import '../../../presentation/providers/ingredient_provider.dart';
 import '../../../presentation/providers/recipe_match_provider.dart';
 import '../../../presentation/providers/trending_provider.dart';
+import '../../../presentation/providers/user_settings_provider.dart';
 import '../../../presentation/theme/app_colors.dart';
 import 'widgets/ingredient_chip.dart';
 import 'widgets/trending_card.dart';
@@ -63,9 +64,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (!canGenerate) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Aucune recette trouvée. Essaie d\'autres ingrédients !'),
+        SnackBar(
+          content: const Text(
+            'Aucune recette trouvée. Configure ta clé API Mistral dans Profil → Modifier mes informations.',
+          ),
+          action: SnackBarAction(
+            label: 'Profil',
+            onPressed: () => context.go(Routes.profile),
+          ),
         ),
       );
       return;
@@ -93,6 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final ingredients = ref.watch(ingredientProvider);
+    final hasMistralKey = ref.watch(hasUserMistralKeyProvider);
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -131,6 +138,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 const _HeroCard(),
+                if (!hasMistralKey) ...[
+                  const SizedBox(height: 16),
+                  _MistralKeyBanner(
+                    onTap: () => context.push(Routes.editProfile),
+                  ),
+                ],
                 const SizedBox(height: 32),
                 _IngredientInput(
                   controller: _controller,
@@ -224,6 +237,79 @@ class _TrendingList extends ConsumerWidget {
 }
 
 // ─── Private sub-widgets ────────────────────────────────────────────────────
+
+class _MistralKeyBanner extends StatelessWidget {
+  final VoidCallback onTap;
+  const _MistralKeyBanner({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primaryContainer.withValues(alpha: 0.35),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.key_outlined,
+                  color: AppColors.primary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Configure ta clé API pour activer l\'app',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.onSurface,
+                          ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Sans clé Mistral, la génération de recettes par IA ne fonctionne pas. Ajoute-la dans ton profil — c\'est gratuit et stocké sur ton téléphone.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.onSurfaceVariant,
+                            height: 1.35,
+                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Aller au profil →',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _HeroCard extends StatelessWidget {
   const _HeroCard();

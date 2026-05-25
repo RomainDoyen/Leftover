@@ -18,6 +18,7 @@ import '../../domain/use_cases/generate_recipe_use_case.dart';
 import '../../domain/use_cases/match_recipes_use_case.dart';
 
 import '../../env.dart';
+import '../../presentation/providers/user_settings_provider.dart';
 
 final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
   if (Env.useFirebase) {
@@ -47,7 +48,8 @@ final addToShoppingListUseCaseProvider = Provider<AddToShoppingListUseCase>((ref
 });
 
 final mistralRecipeSourceProvider = Provider<MistralRecipeSource>((ref) {
-  return MistralRecipeSource();
+  final apiKey = ref.watch(effectiveMistralApiKeyProvider);
+  return MistralRecipeSource(apiKey: apiKey);
 });
 
 final generateRecipeUseCaseProvider = Provider<GenerateRecipeUseCase>((ref) {
